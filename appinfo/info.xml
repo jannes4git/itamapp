@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <!--
+    SPDX-FileCopyrightText: Jannes Lensch <jannes.lensch@web.de>
+    SPDX-License-Identifier: CC0-1.0
+    -->
+    <id>itamapp</id>
+    <name>Itam App</name>
+    <summary>IT asset management application</summary>
+    <description><![CDATA[This is an IT asset management application which was developed as part of a bachelor thesis.]]></description>
+    <version>0.8.0</version>
+    <licence>agpl</licence>
+    <author mail="jannes.lensch@web.de">Jannes Lensch</author>
+    <namespace>ItamApp</namespace>
+    <category>tools</category>
+    <bugs>https://test.de</bugs>
+    <dependencies>
+        <nextcloud min-version="25" max-version="26"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Itam App</name>
+            <route>itamapp.page.index</route>
+        </navigation>
+    </navigations>
+</info>
