@@ -10,13 +10,13 @@
 
 				<div class="field">
 					<label class="label"> Seriennummer: </label>
-					<input class="input" type="text" v-model="seriennummer" required />
+					<input class="input" type="text" v-model="seriennummer" />
 				</div>
 				<div class="field">
 					<label class="label"> Raum: </label>
 
-					<select class="input" v-model="raum" required>
-						<option disabled value="">Bitte Raum wählen</option>
+					<select class="input" v-model="raum">
+						<option disabled value="">Raum wählen</option>
 						<option v-for="raum in raeume" :key="raum.id" :value="raum">
 							{{ raum.raumName }}
 						</option>
@@ -25,8 +25,8 @@
 				<div class="field">
 					<label class="label"> Person: </label>
 
-					<select class="input" v-model="person" required>
-						<option disabled value="">Bitte Person wählen</option>
+					<select class="input" v-model="person">
+						<option disabled value="">Person wählen</option>
 						<option v-for="person in personen" :key="raum.id" :value="person">
 							{{ person.name }}
 						</option>
@@ -37,8 +37,9 @@
 					<label class="label"> {{ field.name }}: </label>
 					<input type="text" v-model="customFieldValues[field.name]" />
 				</div>
+				<button @click="createAsset">Erstellen</button>
+
 			</form>
-			<button @click="createAsset">Erstellen</button>
 		</div>
 	</div>
 </template>
@@ -51,8 +52,8 @@ import { postAsset } from '../AssetService';
 export default {
 	data() {
 		return {
-			rechnungsdatum: '123',
-			seriennummer: '123',
+			rechnungsdatum: '',
+			seriennummer: '',
 			raum: '',
 			person: '',
 			customFieldValues: {},
@@ -77,6 +78,10 @@ export default {
 			return this[fieldName.toLowerCase()];
 		},
 		async createAsset() {
+			if(this.rechnungsdatum){
+				alert('Bitte Rechnungsdatum angeben');
+				return;
+			}
 			console.log('Create Asset' + this.raum.id + ' ' + this.person.id);
 			const asset = {
 				rechnungsdatum: this.rechnungsdatum,

@@ -50,9 +50,9 @@ class PersonController extends Controller
      * @param string $rechnungsdatum
      * @param string|null $beschreibung
      */
-    public function create(string $name)
+    public function create(string $name, ?int $locationId = null)
     {
-        $id = $this->utilService->createPerson($name);
+        $id = $this->utilService->createPerson($name, $locationId);
         return new DataResponse($id);
     }
 
@@ -60,12 +60,12 @@ class PersonController extends Controller
      * @NoAdminRequired
      *
      * @param int $id
-     * @param string $date
-     * @param string $beschreibung
+     * @param string $name
+     * @param string $locationId
      */
-    public function update(int $id, string $name)
+    public function update(int $id, ?string $name = null, ?int $locationId = null)
     {
-        $id = $this->utilService->updatePerson($id, $name);
+        $id = $this->utilService->updatePerson($id, $name, $locationId);
         return new DataResponse($id);
     }
 

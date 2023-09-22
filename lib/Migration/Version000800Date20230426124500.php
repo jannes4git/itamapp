@@ -25,21 +25,6 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-
-		//Person Table 
-		if (!$schema->hasTable('person')) {
-			$table = $schema->createTable('person');
-			$table->addColumn('id', 'bigint', [
-				'unsigned' => true,
-				'autoincrement' => true,
-				'notnull' => true,
-			]);
-			$table->addColumn('name', 'string', [
-				'length' => 255,
-				'notnull' => true,
-			]);
-			$table->setPrimaryKey(['id']);
-		}
 		//Raum Table
 		if (!$schema->hasTable('raum')) {
 			$raumTable = $schema->createTable('raum');
@@ -55,6 +40,26 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 
 			$raumTable->setPrimaryKey(['id']);
 		}
+		//Person Table 
+		if (!$schema->hasTable('person')) {
+			$table = $schema->createTable('person');
+			$table->addColumn('id', 'bigint', [
+				'unsigned' => true,
+				'autoincrement' => true,
+				'notnull' => true,
+			]);
+			$table->addColumn('name', 'string', [
+				'length' => 255,
+				'notnull' => true,
+			]);
+			$table->addColumn('locationId', 'bigint', [
+				'notnull' => false,
+				'unsigned' => true,
+			]);
+			$table->setPrimaryKey(['id']);
+			$table->addForeignKeyConstraint($schema->getTable('raum'), ['locationId'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'SET NULL'], 'location_person_fk');
+		}
+
 		//Custom Field Table
 		if (!$schema->hasTable('custom_fields')) {
 			$cfTable = $schema->createTable('custom_fields');

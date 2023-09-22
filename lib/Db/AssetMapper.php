@@ -11,6 +11,7 @@ use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use Psr\Log\NullLogger;
 
 use function Safe\mysql_query;
 
@@ -58,7 +59,7 @@ class AssetMapper extends QBMapper
 			->where($qb->expr()->eq('a.personId', $qb->createNamedParameter($personId)));
 		return $this->findEntities($qb);
 	}
-	public function changeRaum(int $assetId, int $raumId)
+	public function changeRaum(int $assetId, ?int $raumId = null)
 	{
 		$qb = $this->db->getQueryBuilder();
 		$qb->update('asset')

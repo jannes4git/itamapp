@@ -36,9 +36,6 @@ class AssetService
 	public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
 	{
 		$asset = new Asset();
-		if ($seriennummer == "") {
-			$seriennummer = 123;
-		}
 		$asset->setSeriennummer($seriennummer);
 		$asset->setRechnungsdatum($rechnungsdatum);
 		$asset->setInventarnummer($inventarnummer);
@@ -114,7 +111,7 @@ class AssetService
 	{
 		return $this->assetMapper->findAssetOfPerson($personId);
 	}
-	public function changeRaumId(int $assetId, int $raumId)
+	public function changeRaumId(int $assetId, ?int $raumId = null)
 	{
 		$this->assetMapper->changeRaum($assetId, $raumId);
 	}

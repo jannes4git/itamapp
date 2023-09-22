@@ -25,7 +25,7 @@ class PersonMapper extends QBMapper
 		parent::__construct($db, 'person', Person::class);
 	}
 
-    /**
+	/**
 	 * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
 	 * @throws DoesNotExistException
 	 */

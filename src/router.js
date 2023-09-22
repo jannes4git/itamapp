@@ -1,13 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from './views/Home.vue';
-import Invent from './Components/Invent.vue';
 import ImportCSV from './Components/CSV/ImportCSV.vue';
 import InventoryTable from './Components/InventoryTable.vue';
 import NewAsset from './Components/NewAsset.vue';
 import NewCustomField from './Components/NewCustomField.vue';
 import AssetDetail from './Components/AssetDetail.vue';
-import CreatePDF from './Components/CreatePDF.vue';
 import NewPerson from './Components/NewPerson.vue';
 import NewRaum from './Components/NewRaum.vue';
 import PersonRaum from './Components/PersonRaum.vue';
@@ -26,14 +23,6 @@ const routes = [
 	{
 		path: '/',
 		component: InventoryTable,
-	},
-	{
-		path: '/invent',
-		component: Invent,
-	},
-	{
-		path: '/home',
-		component: Home,
 	},
 	{
 		path: '/importCSV',
@@ -60,10 +49,6 @@ const routes = [
 		component: AssetDetail,
 		name: 'AssetDetail',
 		props: true, // Dynamische Route mit einem Platzhalter ":id"
-	},
-	{
-		path: '/createPDF',
-		component: CreatePDF,
 	},
 	{
 		path: '/personRaum',

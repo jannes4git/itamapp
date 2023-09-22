@@ -6,6 +6,7 @@
 
 			<select class="input" v-model="selectedRaumIds[person.id]">
 				<option disabled value="">Bitte einen Raum auswählen</option>
+				<option value="null">Kein Raum</option>
 				<option v-for="r in raeume" :value="r.id" :key="r.id">
 					{{ r.raumName }}
 				</option>
@@ -45,19 +46,23 @@ export default {
 	},
 	methods: {
 		async getPersonRaum() {
-			const response = await axios.get(generateUrl('/apps/itamapp/personraum'));
+			const response = await axios.get(generateUrl('/apps/itamapp/person'));
 			this.personRaum = response.data;
 			console.log('Got ' + JSON.stringify(this.personRaum));
 			console.log(this.raeume);
 			this.personRaum.forEach((rp) => {
-				this.selectedRaumIds[rp.personId] = rp.raumId;
+				this.selectedRaumIds[rp.id] = rp.locationId;
 			});
+			console.log(JSON.stringify(this.selectedRaumIds));
 		},
 		async updatePersonRaum(personId) {
-			const raumId = this.selectedRaumIds[personId];
-			const response = await axios.post(generateUrl('/apps/itamapp/personraum'), {
-				personId: personId,
-				raumId: raumId,
+			let raumId = this.selectedRaumIds[personId];
+			console.log('Update ' + personId + ' to ' + raumId);
+			if (raumId === 'null') {
+				raumId = null;
+			}
+			const response = await axios.put(generateUrl('/apps/itamapp/person/'+personId), {
+				locationId: raumId,
 			});
 		},
 		getRaumIdForPerson(personId) {

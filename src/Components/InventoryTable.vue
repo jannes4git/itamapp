@@ -16,27 +16,27 @@
 							<th><b>Raum</b></th>
 							<th><b>Person</b></th>
 
-							<th v-for="(field, id) in fields" :key="id">
+							<th v-for="(field, id) in customFields" :key="id">
 								<b>{{ field.name }}</b>
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr
-							v-for="(item, index) in paginatedData"
-							:key="item.id"
-							@click="push(item.id, item)">
+							v-for="(asset, index) in paginatedData"
+							:key="asset.id"
+							@click="push(asset.id, asset)">
 							<td>{{ index + 1 }}</td>
 							<td>
-								<input type="checkbox" v-model="selected[index]" :value="item.id" />
+								<input type="checkbox" v-model="selected[index]" :value="asset.id" />
 							</td>
-							<td>{{ item.inventarnummer }}</td>
-							<td>{{ item.rechnungsdatum }}</td>
-							<td>{{ item.seriennummer }}</td>
-							<td>{{ getRaumName(item.locationId) }}</td>
-							<td>{{ getPersonName(item.personId) }}</td>
-							<td v-for="(field, id) in fields" :key="id">
-								{{ item[field.name] }}
+							<td>{{ asset.inventarnummer }}</td>
+							<td>{{ asset.rechnungsdatum }}</td>
+							<td>{{ asset.seriennummer }}</td>
+							<td>{{ getRaumName(asset.locationId) }}</td>
+							<td>{{ getPersonName(asset.personId) }}</td>
+							<td v-for="(field, id) in customFields" :key="id">
+								{{ asset[field.name] }}
 							</td>
 						</tr>
 					</tbody>
@@ -62,7 +62,6 @@ import { generateUrl } from '@nextcloud/router';
 import { fetchAssets } from '../AssetService';
 import store from '../store/store';
 import { onActivated } from 'vue';
-import { selectPdf } from '../test';
 import { FilePicker, getFilePickerBuilder, FilePickerType } from '@nextcloud/dialogs';
 
 export default {
@@ -72,16 +71,12 @@ export default {
 	},
 	data() {
 		return {
-			testArray: [
-				{ id: 1, raumName: '1H.008' },
-				{ id: 2, raumName: 'Aula' },
-			],
 			search: '',
 			currentPage: 1,
-			itemsPerPage: 30,
+			assetsPerPage: 30,
 			selected: {},
 			loading: true,
-			customFields: [],
+			//customFields: [],
 			customFieldValues: [],
 		};
 	},
@@ -102,12 +97,12 @@ export default {
 		},
 		exportCSV() {
 			let csv = this.$store.state.assets.defaultAssetFields.join() + ',';
-			csv += this.fields.map((field) => field.name).join(',') + '\n';
+			csv += this.customFields.map((field) => field.name).join(',') + '\n';
 			this.inventar.forEach((asset) => {
 				csv += `${asset.inventarnummer},${asset.rechnungsdatum},${
 					asset.seriennummer
 				},${this.getRaumName(asset.locationId)},${this.getPersonName(asset.personId)},`;
-				csv += this.fields
+				csv += this.customFields
 					.map((field) => asset[field.name])
 					.join(',')
 					.replace(/,/g, ',');
@@ -158,37 +153,38 @@ export default {
 	},
 	computed: {
 		pages() {
-			return Math.ceil(this.filteredInventar.length / this.itemsPerPage);
+			return Math.ceil(this.filteredInventar.length / this.assetsPerPage);
 		},
 		paginatedData() {
-			const start = (this.currentPage - 1) * this.itemsPerPage;
-			const end = start + this.itemsPerPage;
+			const start = (this.currentPage - 1) * this.assetsPerPage;
+			const end = start + this.assetsPerPage;
 			return this.filteredInventar.slice(start, end);
 		},
 		filteredInventar() {
 			if (this.search === '') {
 				return this.inventar;
 			} else {
-				return this.inventar.filter((item) => {
-					let raum = this.getRaumName(item.locationId);
-					let person = this.getPersonName(item.personId);
+				return this.inventar.filter((asset) => {
+					let raum = this.getRaumName(asset.locationId);
+					let person = this.getPersonName(asset.personId);
 					//Prüfen der default Felder
-					const matchesInNormalFields =
-						(item.inventarnummer && item.inventarnummer.includes(this.search)) ||
-						(item.rechnungsdatum && item.rechnungsdatum.includes(this.search)) ||
-						(item.seriennummer && item.seriennummer.includes(this.search)) ||
-						(item.beschreibung && item.beschreibung.includes(this.search)) ||
-						(item.locationId && raum.includes(this.search)) ||
-						(item.personId && person.includes(this.search));
+					const matchesInDefaultFields =
+						(asset.inventarnummer && asset.inventarnummer.includes(this.search)) ||
+						(asset.rechnungsdatum && asset.rechnungsdatum.includes(this.search)) ||
+						(asset.seriennummer && asset.seriennummer.includes(this.search)) ||
+						(asset.beschreibung && asset.beschreibung.includes(this.search)) ||
+						(asset.locationId && raum.includes(this.search)) ||
+						(asset.personId && person.includes(this.search));
 
-					if (matchesInNormalFields) {
+					if (matchesInDefaultFields) {
 						return true;
 					}
 
 					//Prüfen der CustomFields
-					const matchesInCustomFields = this.fields.some((field) => {
-						const fieldName = field.name;
-						return item[fieldName] && item[fieldName].includes(this.search);
+					const matchesInCustomFields = this.customFields.some((customField) => {
+						const cfName = customField.name;
+						//überprüfe auch asset[cfName] auf null, da viele Assets nicht alle CustomFields haben
+						return asset[cfName] && asset[cfName].includes(this.search);
 					});
 
 					return matchesInCustomFields;
@@ -227,7 +223,7 @@ export default {
 		personen() {
 			return this.$store.getters.getPersonen;
 		},
-		fields() {
+		customFields() {
 			return this.$store.state.assets.customFields;
 		},
 	},
