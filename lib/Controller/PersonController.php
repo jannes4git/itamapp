@@ -3,7 +3,7 @@
 namespace OCA\ItamApp\Controller;
 
 use Exception;
-use OCA\ItamApp\Service\UtilService;
+use OCA\ItamApp\Service\PersonRaumService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
@@ -11,13 +11,13 @@ use OCP\IRequest;
 
 class PersonController extends Controller
 {
-    private $utilService;
+    private $personRaumService;
 
 
-    public function __construct(string $appName, IRequest $request, UtilService $utilService)
+    public function __construct(string $appName, IRequest $request, PersonRaumService $personRaumService)
     {
         parent::__construct($appName, $request);
-        $this->utilService = $utilService;
+        $this->personRaumService = $personRaumService;
     }
 
     /**
@@ -25,7 +25,7 @@ class PersonController extends Controller
      */
     public function index(): DataResponse
     {
-        $data = $this->utilService->findAllPersonen();
+        $data = $this->personRaumService->findAllPersonen();
         return new DataResponse($data);
     }
 
@@ -37,7 +37,7 @@ class PersonController extends Controller
     public function show(int $id): DataResponse
     {
         try {
-            return new DataResponse($this->utilService->findPerson($id));
+            return new DataResponse($this->personRaumService->findPerson($id));
         } catch (Exception $e) {
             return new DataResponse([], Http::STATUS_NOT_FOUND);
         }
@@ -52,7 +52,7 @@ class PersonController extends Controller
      */
     public function create(string $name, ?int $locationId = null)
     {
-        $id = $this->utilService->createPerson($name, $locationId);
+        $id = $this->personRaumService->createPerson($name, $locationId);
         return new DataResponse($id);
     }
 
@@ -65,7 +65,7 @@ class PersonController extends Controller
      */
     public function update(int $id, ?string $name = null, ?int $locationId = null)
     {
-        $id = $this->utilService->updatePerson($id, $name, $locationId);
+        $id = $this->personRaumService->updatePerson($id, $name, $locationId);
         return new DataResponse($id);
     }
 
@@ -76,7 +76,7 @@ class PersonController extends Controller
      */
     public function destroy(int $id)
     {
-        $response = $this->utilService->deletePerson($id);
+        $response = $this->personRaumService->deletePerson($id);
         return new DataResponse($response);
     }
 }

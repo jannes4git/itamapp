@@ -16,7 +16,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCA\ItamApp\Service\AssetService;
 
-class UtilService
+class PersonRaumService
 {
     private $personMapper;
     private $assetService;

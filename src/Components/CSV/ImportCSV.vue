@@ -76,20 +76,16 @@ export default {
 			var inventarnummer = this.selected[this.dbArray.indexOf('Inventarnummer')];
 			//console.log('Inventarnummer: ' + inventarnummer);
 			var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
+
+			
 			//console.log('Rechnungsdatum: ' + rechnungsdatum);
 			var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
-			console.log('Seriennummer: ' + seriennummer);
+			//console.log('Seriennummer: ' + seriennummer);
 
 			//console.log('CSV Data: ' + JSON.stringify(this.csvData));
-			let count = 0;
 			let allAssets = [];
 			for (let row of this.csvData) {
-				//console.log('Count: ' + count);
-				if (count == 5) {
-					//break;
-				}
-				count++;
-				console.log('Row: ' + JSON.stringify(row));
+				//console.log('Row: ' + JSON.stringify(row));
 				var asset = {};
 				asset = {
 					inventarnummer: row[inventarnummer],
@@ -98,7 +94,7 @@ export default {
 					customFieldValues: {},
 				};
 				for (let i = 3; i < this.dbArray.length; i++) {
-					console.log('i: ' + i);
+					//console.log('i: ' + i);
 					//if (this.selected[i] != "") {
 					//console.log('Selected: ' + row[this.selected[i]]);
 					asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
@@ -111,7 +107,7 @@ export default {
           console.log("Value:", asset[key]);
         });
         */
-				console.log(asset);
+				//console.log(asset);
 				if (this.hasValidValue(asset)) {
 					allAssets.push(asset);
 				}

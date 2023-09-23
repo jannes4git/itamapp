@@ -80,16 +80,28 @@ class CsvController extends Controller
             return new DataResponse($response, Http::STATUS_CONFLICT);
         }
 
-        //TODO: hier Problem da es zu Inventarnummerduplikaten kommen kann!!!!
-        //foreach ($data as $item) {
-        //    $id = $this->assetService->create($item['inventarnummer'], $item['rechnungsdatum'], $item['seriennummer'], $item['locationId'], $item['personId'], $item['customFieldValues']);
-        //}
+
         $count = 0;
+
         foreach ($data as $index => &$item) {
+            if ($item['rechnungsdatum'] == null) {
+                $response = [
+                    "message" => "Rechnungsdatum fehlt bei Asset"
+                ];
+                return new DataResponse($response, Http::STATUS_CONFLICT);
+            }
             if ($item['inventarnummer'] == null && $item['inventarnummer'] == "") {
                 $item['inventarnummer'] = $this->assetService->generateInventarnummer($item['rechnungsdatum']);
             }
-            $id = $this->assetService->create($item['inventarnummer'], $item['rechnungsdatum'], $item['seriennummer'], $item['locationId'], $item['personId'], $item['customFieldValues']);
+            try {
+                $id = $this->assetService->create($item['inventarnummer'], $item['rechnungsdatum'], $item['seriennummer'], $item['locationId'], $item['personId'], $item['customFieldValues']);
+            } catch (Exception $e) {
+                $response = [
+                    "message" => "Fehler beim Erstellen des Assets mit der Inventarnummer: " . $item['inventarnummer'],
+                    "error" => $e->getMessage(),
+                ];
+                return new DataResponse($response, Http::STATUS_INTERNAL_SERVER_ERROR);
+            }
             $count++;
             unset($item);
         }

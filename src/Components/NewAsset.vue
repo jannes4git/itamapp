@@ -7,7 +7,6 @@
 					<label class="label"> Rechnungsdatum: </label>
 					<input class="input" type="date" v-model="rechnungsdatum" required />
 				</div>
-
 				<div class="field">
 					<label class="label"> Seriennummer: </label>
 					<input class="input" type="text" v-model="seriennummer" />
@@ -35,9 +34,9 @@
 
 				<div class="field" v-for="(field, index) in customFields" :key="index">
 					<label class="label"> {{ field.name }}: </label>
-					<input type="text" v-model="customFieldValues[field.name]" />
+					<input class="input" type="text" v-model="customFieldValues[field.name]" />
 				</div>
-				<button @click="createAsset">Erstellen</button>
+				<button type="submit" @click="createAsset">Erstellen</button>
 
 			</form>
 		</div>
@@ -78,7 +77,7 @@ export default {
 			return this[fieldName.toLowerCase()];
 		},
 		async createAsset() {
-			if(this.rechnungsdatum){
+			if(this.rechnungsdatum == '' || this.rechnungsdatum == null){
 				alert('Bitte Rechnungsdatum angeben');
 				return;
 			}

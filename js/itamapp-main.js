@@ -19458,20 +19458,15 @@ __webpack_require__.r(__webpack_exports__);
       var inventarnummer = this.selected[this.dbArray.indexOf('Inventarnummer')];
       //console.log('Inventarnummer: ' + inventarnummer);
       var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
+
       //console.log('Rechnungsdatum: ' + rechnungsdatum);
       var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
-      console.log('Seriennummer: ' + seriennummer);
+      //console.log('Seriennummer: ' + seriennummer);
 
       //console.log('CSV Data: ' + JSON.stringify(this.csvData));
-      let count = 0;
       let allAssets = [];
       for (let row of this.csvData) {
-        //console.log('Count: ' + count);
-        if (count == 5) {
-          //break;
-        }
-        count++;
-        console.log('Row: ' + JSON.stringify(row));
+        //console.log('Row: ' + JSON.stringify(row));
         var asset = {};
         asset = {
           inventarnummer: row[inventarnummer],
@@ -19480,7 +19475,7 @@ __webpack_require__.r(__webpack_exports__);
           customFieldValues: {}
         };
         for (let i = 3; i < this.dbArray.length; i++) {
-          console.log('i: ' + i);
+          //console.log('i: ' + i);
           //if (this.selected[i] != "") {
           //console.log('Selected: ' + row[this.selected[i]]);
           asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
@@ -19493,7 +19488,7 @@ __webpack_require__.r(__webpack_exports__);
               console.log("Value:", asset[key]);
             });
             */
-        console.log(asset);
+        //console.log(asset);
         if (this.hasValidValue(asset)) {
           allAssets.push(asset);
         }
@@ -19977,7 +19972,7 @@ __webpack_require__.r(__webpack_exports__);
       return this[fieldName.toLowerCase()];
     },
     async createAsset() {
-      if (this.rechnungsdatum) {
+      if (this.rechnungsdatum == '' || this.rechnungsdatum == null) {
         alert('Bitte Rechnungsdatum angeben');
         return;
       }
@@ -21062,6 +21057,7 @@ var render = function render() {
         value: _vm.customFieldValues[field.name],
         expression: "customFieldValues[field.name]"
       }],
+      staticClass: "input",
       attrs: {
         type: "text"
       },
@@ -21076,6 +21072,9 @@ var render = function render() {
       }
     })]);
   }), _vm._v(" "), _c("button", {
+    attrs: {
+      type: "submit"
+    },
     on: {
       click: _vm.createAsset
     }
@@ -55944,4 +55943,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=d186844c57d8c9d66af0
+//# sourceMappingURL=itamapp-main.js.map?v=39ca1401c556fe8d640f

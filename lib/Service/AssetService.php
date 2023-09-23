@@ -35,27 +35,29 @@ class AssetService
 
 	public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
 	{
-		$asset = new Asset();
-		$asset->setSeriennummer($seriennummer);
-		$asset->setRechnungsdatum($rechnungsdatum);
-		$asset->setInventarnummer($inventarnummer);
-		$asset->setLocationId($locationId);
-		$asset->setPersonId($personId);
-		$asset = $this->assetMapper->insert($asset);
+		try {
+			$asset = new Asset();
+			$asset->setSeriennummer($seriennummer);
+			$asset->setRechnungsdatum($rechnungsdatum);
+			$asset->setInventarnummer($inventarnummer);
+			$asset->setLocationId($locationId);
+			$asset->setPersonId($personId);
+			$asset = $this->assetMapper->insert($asset);
 
-		foreach ($customFieldValues as $key => $value) {
-			if ($value == null || $value == "") {
-				continue;
+			foreach ($customFieldValues as $key => $value) {
+				if ($value == null || $value == "") {
+					continue;
+				}
+				$cfv = new CustomFieldValue();
+				$cfv->setAssetId($asset->getId());
+				$id = $this->getIdForCF($key);
+				$cfv->setCustomFieldId($id);
+				$cfv->setValue($value);
+				$this->customFieldValueMapper->insert($cfv);
 			}
-			$cfv = new CustomFieldValue();
-			$cfv->setAssetId($asset->getId());
-			$id = $this->getIdForCF($key);
-			$cfv->setCustomFieldId($id);
-			$cfv->setValue($value);
-			$this->customFieldValueMapper->insert($cfv);
+		} catch (Exception $e) {
+			throw $e;
 		}
-
-
 
 		return $asset->getId();
 	}
