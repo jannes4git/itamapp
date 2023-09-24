@@ -84,9 +84,10 @@ class CsvController extends Controller
         $count = 0;
 
         foreach ($data as $index => &$item) {
-            if ($item['rechnungsdatum'] == null) {
+            //TODO: vielleicht erstmal Defaultrechnungsdatum setzen?
+            if ($item['inventarnummer'] == null && $item['rechnungsdatum'] == null) {
                 $response = [
-                    "message" => "Rechnungsdatum fehlt bei Asset"
+                    "message" => "Rechnungsdatum fehlt bei Asset -> Inventarnummer kann nicht erstellt werden"
                 ];
                 return new DataResponse($response, Http::STATUS_CONFLICT);
             }

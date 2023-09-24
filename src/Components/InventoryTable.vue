@@ -104,8 +104,7 @@ export default {
 				},${this.getRaumName(asset.locationId)},${this.getPersonName(asset.personId)},`;
 				csv += this.customFields
 					.map((field) => asset[field.name])
-					.join(',')
-					.replace(/,/g, ',');
+					.join(',');
 				csv += '\n';
 			});
 
@@ -211,9 +210,7 @@ export default {
 				cfAsset.forEach((cf) => {
 					asset[cf.name] = cf.value;
 				});
-				console.log('Vorher: ' + JSON.stringify(asset));
 				asset.customFields = groupedCustomFields[asset.id];
-				console.log(JSON.stringify(asset));
 			});
 			return assets;
 		},

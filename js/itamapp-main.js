@@ -19726,7 +19726,7 @@ __webpack_require__.r(__webpack_exports__);
       csv += this.customFields.map(field => field.name).join(',') + '\n';
       this.inventar.forEach(asset => {
         csv += "".concat(asset.inventarnummer, ",").concat(asset.rechnungsdatum, ",").concat(asset.seriennummer, ",").concat(this.getRaumName(asset.locationId), ",").concat(this.getPersonName(asset.personId), ",");
-        csv += this.customFields.map(field => asset[field.name]).join(',').replace(/,/g, ',');
+        csv += this.customFields.map(field => asset[field.name]).join(',');
         csv += '\n';
       });
       let blob = new Blob([csv], {
@@ -19825,9 +19825,7 @@ __webpack_require__.r(__webpack_exports__);
         cfAsset.forEach(cf => {
           asset[cf.name] = cf.value;
         });
-        console.log('Vorher: ' + JSON.stringify(asset));
         asset.customFields = groupedCustomFields[asset.id];
-        console.log(JSON.stringify(asset));
       });
       return assets;
     },
@@ -55943,4 +55941,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=39ca1401c556fe8d640f
+//# sourceMappingURL=itamapp-main.js.map?v=5a8d8622ce79f37cc7a5
