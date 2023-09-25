@@ -146,7 +146,8 @@ class AssetService
 	public function generateInventarnummer(?string $date)
 	{
 		if ($date == null) {
-			$date = date("Y-m-d");
+			//$date = date("Y-m-d");
+			throw new Exception("Rechnungsdatum fehlt bei Asset");
 		}
 		//$inventarnummer = $this->assetMapper->getInventarnummer($date);
 		//$inventarnummer = $inventarnummer + 1;

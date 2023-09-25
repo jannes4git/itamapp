@@ -166,7 +166,7 @@ export default {
 				return this.inventar.filter((asset) => {
 					let raum = this.getRaumName(asset.locationId);
 					let person = this.getPersonName(asset.personId);
-					//Prüfen der default Felder
+					//Prüfen der Default-Felder
 					const matchesInDefaultFields =
 						(asset.inventarnummer && asset.inventarnummer.includes(this.search)) ||
 						(asset.rechnungsdatum && asset.rechnungsdatum.includes(this.search)) ||

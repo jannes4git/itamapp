@@ -62,6 +62,8 @@ class CsvController extends Controller
         $data = json_decode($postData, true);
 
         //TODO: per Transaction rollbackable machen?
+
+        // Check ob Inventarnummern bereits vergeben sind
         $inventarnummernExisting = array();
         foreach ($data as $index => &$item) {
             if ($item['inventarnummer'] !== null && $item['inventarnummer'] !== "") {
@@ -79,32 +81,59 @@ class CsvController extends Controller
             ];
             return new DataResponse($response, Http::STATUS_CONFLICT);
         }
+        $inventarnummerAndRechnungsdatumMissing = array();
+        foreach ($data as $index => &$item) {
+            if (($item['inventarnummer'] == null || $item['inventarnummer'] == "") && ($item['rechnungsdatum'] == null || $item['rechnungsdatum'] == "")) {
+                array_push($inventarnummerAndRechnungsdatumMissing, $index);
+            }
+        }
+        if (count($inventarnummerAndRechnungsdatumMissing) > 0) {
+            $response = [
+                "message" => "Inventarnummer und Rechnungsdatum fehlen bei Assets:",
+                "inventarnummerAndRechnungsdatumMissing" => $inventarnummerAndRechnungsdatumMissing,
+            ];
+            return new DataResponse($response, Http::STATUS_CONFLICT);
+        }
 
 
         $count = 0;
+        $fehlerBeiAsset = array();
 
         foreach ($data as $index => &$item) {
             //TODO: vielleicht erstmal Defaultrechnungsdatum setzen?
-            if ($item['inventarnummer'] == null && $item['rechnungsdatum'] == null) {
-                $response = [
-                    "message" => "Rechnungsdatum fehlt bei Asset -> Inventarnummer kann nicht erstellt werden"
-                ];
-                return new DataResponse($response, Http::STATUS_CONFLICT);
-            }
+            //if ($item['inventarnummer'] == null && $item['rechnungsdatum'] == null) {
+            //    $response = [
+            //        "message" => "Rechnungsdatum fehlt bei Asset -> Inventarnummer kann nicht erstellt werden"
+            //    ];
+            //    return new DataResponse($response, Http::STATUS_CONFLICT);
+            //}
             if ($item['inventarnummer'] == null && $item['inventarnummer'] == "") {
-                $item['inventarnummer'] = $this->assetService->generateInventarnummer($item['rechnungsdatum']);
+                try {
+                    $item['inventarnummer'] = $this->assetService->generateInventarnummer($item['rechnungsdatum']);
+                } catch (Exception $e) {
+                    array_push($fehlerBeiAsset, $count);
+                    continue;
+                }
             }
             try {
                 $id = $this->assetService->create($item['inventarnummer'], $item['rechnungsdatum'], $item['seriennummer'], $item['locationId'], $item['personId'], $item['customFieldValues']);
             } catch (Exception $e) {
-                $response = [
-                    "message" => "Fehler beim Erstellen des Assets mit der Inventarnummer: " . $item['inventarnummer'],
-                    "error" => $e->getMessage(),
-                ];
-                return new DataResponse($response, Http::STATUS_INTERNAL_SERVER_ERROR);
+                //array_push($fehlerBeiAsset, $count);
+                //$response = [
+                //    "message" => "Fehler beim Erstellen des Assets mit der Inventarnummer: " . $item['inventarnummer'],
+                //    "error" => $e->getMessage(),
+                //];
+                //return new DataResponse($response, Http::STATUS_INTERNAL_SERVER_ERROR);
             }
             $count++;
             unset($item);
+        }
+        if (count($fehlerBeiAsset) > 0) {
+            $response = [
+                "message" => "Fehler beim Erstellen der Assets mit den Inventarnummern: ",
+                "fehlerBeiAsset" => $fehlerBeiAsset,
+            ];
+            return new DataResponse($response, Http::STATUS_INTERNAL_SERVER_ERROR);
         }
 
         return new DataResponse($count);

@@ -20354,32 +20354,8 @@ var render = function render() {
     staticClass: "importCSV",
     attrs: {
       text: "CSV-Import"
-    },
-    scopedSlots: _vm._u([{
-      key: "icon",
-      fn: function () {
-        return [_c("FileImport")];
-      },
-      proxy: true
-    }])
-  })], 1), _vm._v(" "), _vm._v(" "), _c("NcAppNavigationItem", {
-    attrs: {
-      name: "",
-      disabled: true,
-      icon: _vm.icon - _vm.toggle - _vm.filelist
-    },
-    scopedSlots: _vm._u([{
-      key: "icon",
-      fn: function () {
-        return [_c("TableLargeIcon", {
-          attrs: {
-            size: 20
-          }
-        })];
-      },
-      proxy: true
-    }])
-  })], 1), _vm._v(" "), _c("NcAppContent", [_c("router-view")], 1)], 1);
+    }
+  })], 1)], 1), _vm._v(" "), _c("NcAppContent", [_c("router-view")], 1)], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -55941,4 +55917,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=5a8d8622ce79f37cc7a5
+//# sourceMappingURL=itamapp-main.js.map?v=f5d005190ad7cc1adcd2

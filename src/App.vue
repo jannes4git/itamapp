@@ -15,9 +15,7 @@
 					text="Person-Raum-Wechsel"></NcAppNavigationNew>
 			</router-link>
 			<router-link :to="'/importCSV'">
-				<NcAppNavigationNew class="importCSV" text="CSV-Import"
-					><template #icon> <FileImport /> </template
-				></NcAppNavigationNew>
+				<NcAppNavigationNew class="importCSV" text="CSV-Import"></NcAppNavigationNew>
 			</router-link>
 
 			<template #footer>
@@ -68,9 +66,6 @@
 				</router-link>
 			</template>
 
-			<NcAppNavigationItem :name="''" :disabled="true" :icon="icon - toggle - filelist"
-				><template #icon> <TableLargeIcon :size="20" /> </template
-			></NcAppNavigationItem>
 		</NcAppNavigation>
 
 		<NcAppContent>
