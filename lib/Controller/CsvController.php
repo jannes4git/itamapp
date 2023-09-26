@@ -84,13 +84,13 @@ class CsvController extends Controller
         $inventarnummerAndRechnungsdatumMissing = array();
         foreach ($data as $index => &$item) {
             if (($item['inventarnummer'] == null || $item['inventarnummer'] == "") && ($item['rechnungsdatum'] == null || $item['rechnungsdatum'] == "")) {
-                array_push($inventarnummerAndRechnungsdatumMissing, $index);
+                array_push($inventarnummerAndRechnungsdatumMissing, $index + 2);
             }
         }
         if (count($inventarnummerAndRechnungsdatumMissing) > 0) {
             $response = [
-                "message" => "Inventarnummer und Rechnungsdatum fehlen bei Assets:",
-                "inventarnummerAndRechnungsdatumMissing" => $inventarnummerAndRechnungsdatumMissing,
+                "message" => "Inventarnummer und Rechnungsdatum fehlen bei Assets.",
+                "CSV-Zeilen" => $inventarnummerAndRechnungsdatumMissing,
             ];
             return new DataResponse($response, Http::STATUS_CONFLICT);
         }

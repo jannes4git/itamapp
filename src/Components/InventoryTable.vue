@@ -96,8 +96,10 @@ export default {
 			return '';
 		},
 		exportCSV() {
+			//Erstelle die CSV-Kopfzeile
 			let csv = this.$store.state.assets.defaultAssetFields.join() + ',';
 			csv += this.customFields.map((field) => field.name).join(',') + '\n';
+			//Füge die Daten hinzu
 			this.inventar.forEach((asset) => {
 				csv += `${asset.inventarnummer},${asset.rechnungsdatum},${
 					asset.seriennummer
@@ -171,7 +173,6 @@ export default {
 						(asset.inventarnummer && asset.inventarnummer.includes(this.search)) ||
 						(asset.rechnungsdatum && asset.rechnungsdatum.includes(this.search)) ||
 						(asset.seriennummer && asset.seriennummer.includes(this.search)) ||
-						(asset.beschreibung && asset.beschreibung.includes(this.search)) ||
 						(asset.locationId && raum.includes(this.search)) ||
 						(asset.personId && person.includes(this.search));
 
@@ -210,7 +211,8 @@ export default {
 				cfAsset.forEach((cf) => {
 					asset[cf.name] = cf.value;
 				});
-				asset.customFields = groupedCustomFields[asset.id];
+				
+				//asset.customFields = groupedCustomFields[asset.id];
 			});
 			return assets;
 		},

@@ -11,14 +11,6 @@ import PersonRaum from './Components/PersonRaum.vue';
 import { generateUrl } from '@nextcloud/router';
 Vue.use(VueRouter);
 
-// The router will try to match routers in a descending order.
-// Routes that share the same root, must be listed from the
-//  most descriptive to the least descriptive, e.g.
-//  /section/component/subcomponent/edit/:id
-//  /section/component/subcomponent/new
-//  /section/component/subcomponent/:id
-//  /section/component/:id
-//  /section/:id
 const routes = [
 	{
 		path: '/',
@@ -48,7 +40,7 @@ const routes = [
 		path: '/asset/:id',
 		component: AssetDetail,
 		name: 'AssetDetail',
-		props: true, // Dynamische Route mit einem Platzhalter ":id"
+		props: true,
 	},
 	{
 		path: '/personRaum',

@@ -20,6 +20,8 @@
 <script>
 import axios from '@nextcloud/axios';
 import { generateUrl } from '@nextcloud/router';
+import { fetchAssets } from '../AssetService';
+
 
 export default {
 	data() {
@@ -70,8 +72,9 @@ export default {
 			return mapping ? mapping.raumId : '';
 		},
 	},
-	mounted() {
-		this.getPersonRaum();
+	async created() {
+		await fetchAssets();
+		await this.getPersonRaum();
 		this.personRaum.forEach((rp) => {
 			this.selectedRaumIds[rp.personId] = rp.raumId;
 		});

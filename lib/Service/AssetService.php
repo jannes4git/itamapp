@@ -59,7 +59,7 @@ class AssetService
 			throw $e;
 		}
 
-		return $asset->getId();
+		return $asset->getInventarnummer();
 	}
 	public function update(int $id, string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
 	{

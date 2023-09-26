@@ -90,8 +90,15 @@ export default {
 				customFieldValues: this.customFieldValues,
 			};
 			console.log('Asset: ', asset);
-			let response = await postAsset(asset);
-			console.log('Response: ', response);
+			try {
+				let response = await postAsset(asset);
+				console.log('Response: ', response.status);
+				alert('Asset erfolgreich erstellt' + JSON.stringify(response));
+				this.$router.push('/');
+			} catch (error) {
+				console.log('Error: ', error);
+			}
+			
 		},
 	},
 };

@@ -66,23 +66,10 @@ export default {
 		},
 		async importCSV() {
 			console.log('Import CSV');
-			//console.log(this.csvData);
-			//console.log(this.csvFields);
-			//console.log("Datenbank Array " + this.dbArray);
-			//console.log("Datenbank Default " + this.defaultFelder);
-			//console.log("Datenbank Custom " + this.customFelder);
-			//console.log("Selektiert: " + this.selected);
-			//Inventarnummer:
+			//Default-Felder:
 			var inventarnummer = this.selected[this.dbArray.indexOf('Inventarnummer')];
-			//console.log('Inventarnummer: ' + inventarnummer);
 			var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
-
-			
-			//console.log('Rechnungsdatum: ' + rechnungsdatum);
 			var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
-			//console.log('Seriennummer: ' + seriennummer);
-
-			//console.log('CSV Data: ' + JSON.stringify(this.csvData));
 			let allAssets = [];
 			for (let row of this.csvData) {
 				//console.log('Row: ' + JSON.stringify(row));
@@ -94,28 +81,22 @@ export default {
 					customFieldValues: {},
 				};
 				for (let i = 3; i < this.dbArray.length; i++) {
-					//console.log('i: ' + i);
-					//if (this.selected[i] != "") {
-					//console.log('Selected: ' + row[this.selected[i]]);
 					asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
-					//}
 				}
-				//console.log('Custom Field Values: ' + asset.customFieldValues);
-				/*
-        Object.keys(asset).forEach((key) => {
-          console.log("Key:", key);
-          console.log("Value:", asset[key]);
-        });
-        */
-				//console.log(asset);
+
 				if (this.hasValidValue(asset)) {
 					allAssets.push(asset);
 				}
-
-				//await postAsset(asset);
 			}
-			this.postCSV(allAssets);
-			console.log('All Assets: ' + JSON.stringify(allAssets));
+			try{
+				let response = await postAssets(allAssets);
+				console.log('Response: ', response.status);
+				alert('Import von ' + JSON.stringify(response)+ ' Assets erfolgreich');
+				this.$router.push('/');
+			} catch (error) {
+				console.log('Error: ', error);
+			}
+			//await this.postCSV(allAssets);
 			console.log('Import fertig');
 		},
 		hasValidValue(asset) {

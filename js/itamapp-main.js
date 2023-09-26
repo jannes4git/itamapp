@@ -19448,22 +19448,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     async importCSV() {
       console.log('Import CSV');
-      //console.log(this.csvData);
-      //console.log(this.csvFields);
-      //console.log("Datenbank Array " + this.dbArray);
-      //console.log("Datenbank Default " + this.defaultFelder);
-      //console.log("Datenbank Custom " + this.customFelder);
-      //console.log("Selektiert: " + this.selected);
-      //Inventarnummer:
+      //Default-Felder:
       var inventarnummer = this.selected[this.dbArray.indexOf('Inventarnummer')];
-      //console.log('Inventarnummer: ' + inventarnummer);
       var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
-
-      //console.log('Rechnungsdatum: ' + rechnungsdatum);
       var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
-      //console.log('Seriennummer: ' + seriennummer);
-
-      //console.log('CSV Data: ' + JSON.stringify(this.csvData));
       let allAssets = [];
       for (let row of this.csvData) {
         //console.log('Row: ' + JSON.stringify(row));
@@ -19475,29 +19463,21 @@ __webpack_require__.r(__webpack_exports__);
           customFieldValues: {}
         };
         for (let i = 3; i < this.dbArray.length; i++) {
-          //console.log('i: ' + i);
-          //if (this.selected[i] != "") {
-          //console.log('Selected: ' + row[this.selected[i]]);
           asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
-          //}
         }
-        //console.log('Custom Field Values: ' + asset.customFieldValues);
-        /*
-            Object.keys(asset).forEach((key) => {
-              console.log("Key:", key);
-              console.log("Value:", asset[key]);
-            });
-            */
-        //console.log(asset);
         if (this.hasValidValue(asset)) {
           allAssets.push(asset);
         }
-
-        //await postAsset(asset);
       }
-
-      this.postCSV(allAssets);
-      console.log('All Assets: ' + JSON.stringify(allAssets));
+      try {
+        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_4__.postAssets)(allAssets);
+        console.log('Response: ', response.status);
+        alert('Import von ' + JSON.stringify(response) + ' Assets erfolgreich');
+        this.$router.push('/');
+      } catch (error) {
+        console.log('Error: ', error);
+      }
+      //await this.postCSV(allAssets);
       console.log('Import fertig');
     },
     hasValidValue(asset) {
@@ -19722,8 +19702,10 @@ __webpack_require__.r(__webpack_exports__);
       return '';
     },
     exportCSV() {
+      //Erstelle die CSV-Kopfzeile
       let csv = this.$store.state.assets.defaultAssetFields.join() + ',';
       csv += this.customFields.map(field => field.name).join(',') + '\n';
+      //Füge die Daten hinzu
       this.inventar.forEach(asset => {
         csv += "".concat(asset.inventarnummer, ",").concat(asset.rechnungsdatum, ",").concat(asset.seriennummer, ",").concat(this.getRaumName(asset.locationId), ",").concat(this.getPersonName(asset.personId), ",");
         csv += this.customFields.map(field => asset[field.name]).join(',');
@@ -19789,8 +19771,8 @@ __webpack_require__.r(__webpack_exports__);
         return this.inventar.filter(asset => {
           let raum = this.getRaumName(asset.locationId);
           let person = this.getPersonName(asset.personId);
-          //Prüfen der default Felder
-          const matchesInDefaultFields = asset.inventarnummer && asset.inventarnummer.includes(this.search) || asset.rechnungsdatum && asset.rechnungsdatum.includes(this.search) || asset.seriennummer && asset.seriennummer.includes(this.search) || asset.beschreibung && asset.beschreibung.includes(this.search) || asset.locationId && raum.includes(this.search) || asset.personId && person.includes(this.search);
+          //Prüfen der Default-Felder
+          const matchesInDefaultFields = asset.inventarnummer && asset.inventarnummer.includes(this.search) || asset.rechnungsdatum && asset.rechnungsdatum.includes(this.search) || asset.seriennummer && asset.seriennummer.includes(this.search) || asset.locationId && raum.includes(this.search) || asset.personId && person.includes(this.search);
           if (matchesInDefaultFields) {
             return true;
           }
@@ -19825,8 +19807,10 @@ __webpack_require__.r(__webpack_exports__);
         cfAsset.forEach(cf => {
           asset[cf.name] = cf.value;
         });
-        asset.customFields = groupedCustomFields[asset.id];
+
+        //asset.customFields = groupedCustomFields[asset.id];
       });
+
       return assets;
     },
     raeume() {
@@ -19983,8 +19967,14 @@ __webpack_require__.r(__webpack_exports__);
         customFieldValues: this.customFieldValues
       };
       console.log('Asset: ', asset);
-      let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_2__.postAsset)(asset);
-      console.log('Response: ', response);
+      try {
+        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_2__.postAsset)(asset);
+        console.log('Response: ', response.status);
+        alert('Asset erfolgreich erstellt' + JSON.stringify(response));
+        this.$router.push('/');
+      } catch (error) {
+        console.log('Error: ', error);
+      }
     }
   }
 });
@@ -20167,6 +20157,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @nextcloud/axios */ "./node_modules/@nextcloud/axios/dist/index.js");
 /* harmony import */ var _nextcloud_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nextcloud/router */ "./node_modules/@nextcloud/router/dist/index.js");
+/* harmony import */ var _AssetService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AssetService */ "./src/AssetService.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -20218,8 +20210,9 @@ __webpack_require__.r(__webpack_exports__);
       return mapping ? mapping.raumId : '';
     }
   },
-  mounted() {
-    this.getPersonRaum();
+  async created() {
+    await (0,_AssetService__WEBPACK_IMPORTED_MODULE_2__.fetchAssets)();
+    await this.getPersonRaum();
     this.personRaum.forEach(rp => {
       this.selectedRaumIds[rp.personId] = rp.raumId;
     });
@@ -21571,15 +21564,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_9__["default"].use(vue_router__WEBPACK_IMPORTED_MODULE_10__["default"]);
-
-// The router will try to match routers in a descending order.
-// Routes that share the same root, must be listed from the
-//  most descriptive to the least descriptive, e.g.
-//  /section/component/subcomponent/edit/:id
-//  /section/component/subcomponent/new
-//  /section/component/subcomponent/:id
-//  /section/component/:id
-//  /section/:id
 const routes = [{
   path: '/',
   component: _Components_InventoryTable_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -21602,7 +21586,7 @@ const routes = [{
   path: '/asset/:id',
   component: _Components_AssetDetail_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
   name: 'AssetDetail',
-  props: true // Dynamische Route mit einem Platzhalter ":id"
+  props: true
 }, {
   path: '/personRaum',
   component: _Components_PersonRaum_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
@@ -55917,4 +55901,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=f5d005190ad7cc1adcd2
+//# sourceMappingURL=itamapp-main.js.map?v=6aa576902f86df9418cb
