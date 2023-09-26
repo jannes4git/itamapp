@@ -19446,6 +19446,9 @@ __webpack_require__.r(__webpack_exports__);
       console.log(t);
       this.selected = Array(this.dbArray.length).fill('');
     },
+    /**
+     * Importiert die zugeordneten CSV Felder in die Datenbank
+     */
     async importCSV() {
       console.log('Import CSV');
       //Default-Felder:
@@ -19453,18 +19456,21 @@ __webpack_require__.r(__webpack_exports__);
       var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
       var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
       let allAssets = [];
+      //Gehe alle Zeilen der CSV durch
       for (let row of this.csvData) {
-        //console.log('Row: ' + JSON.stringify(row));
         var asset = {};
+        //Schreibe Default-Felder aus der CSV Zuordnung in asset
         asset = {
           inventarnummer: row[inventarnummer],
           rechnungsdatum: row[rechnungsdatum],
           seriennummer: row[seriennummer],
           customFieldValues: {}
         };
+        //Schreibe CustomFieldValues aus der CSV Zuordnung in asset
         for (let i = 3; i < this.dbArray.length; i++) {
           asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
         }
+        //Füge das Asset dem Asset-Array hinzu falls es valide Werte enthält
         if (this.hasValidValue(asset)) {
           allAssets.push(asset);
         }
@@ -19480,6 +19486,10 @@ __webpack_require__.r(__webpack_exports__);
       //await this.postCSV(allAssets);
       console.log('Import fertig');
     },
+    /**
+     * Check ob ein Asset gültige Werte hat
+     * @param {*} asset 
+     */
     hasValidValue(asset) {
       for (let key in asset) {
         if (asset.hasOwnProperty(key)) {
@@ -19506,9 +19516,19 @@ __webpack_require__.r(__webpack_exports__);
       let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_4__.postAssets)(csvData);
       console.log(response);
     },
+    /**
+     * Check ob ein CSV Feld bereits zugeordnet wurde
+     * @param {*} csvColumn 
+     */
     isDisabled(csvColumn) {
       return this.selected.includes(csvColumn);
     },
+    /**
+     * Liest die CSV Datei ein, speichert die Felder in csvFields und die Daten als Objekte in csvData.
+     * Führt dann eine automatische Zuordnung durch.
+     * 
+     * @param {*} event 
+     */
     handleFileUpload(event) {
       const file = event.target.files[0];
       papaparse__WEBPACK_IMPORTED_MODULE_0___default().parse(file, {
@@ -19543,35 +19563,10 @@ __webpack_require__.r(__webpack_exports__);
           }
         }
       });
-
-      /*
-         this.daten.forEach((dbColumn, index) => {
-           const dbColumnSanitized = dbColumn.field
-             .toLowerCase()
-             .replace(/\s+/g, "");
-           const matchingCsvColumn = this.csvFields.find(
-             (csvColumn) =>
-               csvColumn.toLowerCase().replace(/\s+/g, "") === dbColumnSanitized
-           );
-           if (matchingCsvColumn) {
-             this.selected[index] = matchingCsvColumn;
-           } else {
-             const bestMatch = fuzzysort.go(
-               dbColumnSanitized,
-               this.csvFields.map((csvColumn) =>
-                 csvColumn.toLowerCase().replace(/\s+/g, "")
-               ),
-               { limit: 1 }
-             )[0];
-             if (bestMatch && bestMatch.score > -10000) {
-               // Sie können den Schwellenwert anpassen, um die Sensibilität des Fuzzy-Matching zu steuern
-               this.selected[index] = this.csvColumns[bestMatch.index];
-             }
-             }
-          });
-         */
     },
-
+    /**
+     * Gibt das Mapping von Datenbankfeldern zu CSV Feldern zurück
+     */
     getMapping() {
       let mapping = {};
       for (let i = 0; i < this.dbArray.length; i++) {
@@ -19583,20 +19578,13 @@ __webpack_require__.r(__webpack_exports__);
       }
       return mapping;
     },
-    mapFields() {
-      // Implement custom mapping logic here
-
-      console.log('Selected: ' + this.selected);
-      console.log('DB Array: ' + this.dbArray);
-      console.log(this.getMapping());
-    },
     availableCsvColumns(index) {
       const selectedColumns = this.selected.filter((selected, selectedIndex) => selectedIndex !== index && selected !== 'none');
       return this.csvFields.filter(csvColumn => !selectedColumns.includes(csvColumn));
     },
-    handleChange(index) {
-      console.log('handleChange', index);
-      this.$set(this.selected, index, this.selected[index]);
+    handleChange() {
+      //console.log('handleChange', index);
+      //this.$set(this.selected, index, this.selected[index]);
       console.log(this.selected);
     },
     async getColumns() {
@@ -19640,7 +19628,7 @@ __webpack_require__.r(__webpack_exports__);
           table: 'custom_table'
         };
       });
-      this.select(); //console.log(this.dbColumns[1][0].name);
+      this.select();
     }
   }
 });
@@ -20694,7 +20682,7 @@ var render = function render() {
           });
           _vm.$set(_vm.selected, index, $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
         }, function ($event) {
-          return _vm.handleChange(index);
+          return _vm.handleChange();
         }]
       }
     }, [_c("option", {
@@ -55901,4 +55889,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=6aa576902f86df9418cb
+//# sourceMappingURL=itamapp-main.js.map?v=d9add20c063fb7e6d0a2

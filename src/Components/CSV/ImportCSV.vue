@@ -12,7 +12,7 @@
 			</div>
 			<div v-for="(feld, index) in dbArray" :key="index" class="fields">
 				<p>{{ feld }}</p>
-				<select v-model="selected[index]" @change="handleChange(index)">
+				<select v-model="selected[index]" @change="handleChange()">
 					<option disabled value="">Nicht zugeordnet</option>
 					<option value="none">Nicht zuordnen</option>
 					<option
@@ -64,6 +64,9 @@ export default {
 			console.log(t);
 			this.selected = Array(this.dbArray.length).fill('');
 		},
+		/**
+		 * Importiert die zugeordneten CSV Felder in die Datenbank
+		 */
 		async importCSV() {
 			console.log('Import CSV');
 			//Default-Felder:
@@ -71,19 +74,21 @@ export default {
 			var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
 			var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
 			let allAssets = [];
+			//Gehe alle Zeilen der CSV durch
 			for (let row of this.csvData) {
-				//console.log('Row: ' + JSON.stringify(row));
 				var asset = {};
+				//Schreibe Default-Felder aus der CSV Zuordnung in asset
 				asset = {
 					inventarnummer: row[inventarnummer],
 					rechnungsdatum: row[rechnungsdatum],
 					seriennummer: row[seriennummer],
 					customFieldValues: {},
 				};
+				//Schreibe CustomFieldValues aus der CSV Zuordnung in asset
 				for (let i = 3; i < this.dbArray.length; i++) {
 					asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
 				}
-
+				//Füge das Asset dem Asset-Array hinzu falls es valide Werte enthält
 				if (this.hasValidValue(asset)) {
 					allAssets.push(asset);
 				}
@@ -99,6 +104,10 @@ export default {
 			//await this.postCSV(allAssets);
 			console.log('Import fertig');
 		},
+		/**
+		 * Check ob ein Asset gültige Werte hat
+		 * @param {*} asset 
+		 */
 		hasValidValue(asset) {
 			for (let key in asset) {
 				if (asset.hasOwnProperty(key)) {
@@ -129,9 +138,19 @@ export default {
 			let response = await postAssets(csvData);
 			console.log(response);
 		},
+		/**
+		 * Check ob ein CSV Feld bereits zugeordnet wurde
+		 * @param {*} csvColumn 
+		 */
 		isDisabled(csvColumn) {
 			return this.selected.includes(csvColumn);
 		},
+		/**
+		 * Liest die CSV Datei ein, speichert die Felder in csvFields und die Daten als Objekte in csvData.
+		 * Führt dann eine automatische Zuordnung durch.
+		 * 
+		 * @param {*} event 
+		 */
 		handleFileUpload(event) {
 			const file = event.target.files[0];
 
@@ -173,37 +192,10 @@ export default {
 					}
 				}
 			});
-
-			/*
-      this.daten.forEach((dbColumn, index) => {
-        const dbColumnSanitized = dbColumn.field
-          .toLowerCase()
-          .replace(/\s+/g, "");
-        const matchingCsvColumn = this.csvFields.find(
-          (csvColumn) =>
-            csvColumn.toLowerCase().replace(/\s+/g, "") === dbColumnSanitized
-        );
-        if (matchingCsvColumn) {
-          this.selected[index] = matchingCsvColumn;
-        } else {
-          const bestMatch = fuzzysort.go(
-            dbColumnSanitized,
-            this.csvFields.map((csvColumn) =>
-              csvColumn.toLowerCase().replace(/\s+/g, "")
-            ),
-            { limit: 1 }
-          )[0];
-          if (bestMatch && bestMatch.score > -10000) {
-            // Sie können den Schwellenwert anpassen, um die Sensibilität des Fuzzy-Matching zu steuern
-            this.selected[index] = this.csvColumns[bestMatch.index];
-          }
-
-
-        }
-
-      });
-      */
 		},
+		/**
+		 * Gibt das Mapping von Datenbankfeldern zu CSV Feldern zurück
+		 */
 		getMapping() {
 			let mapping = {};
 			for (let i = 0; i < this.dbArray.length; i++) {
@@ -215,22 +207,15 @@ export default {
 			}
 			return mapping;
 		},
-		mapFields() {
-			// Implement custom mapping logic here
-
-			console.log('Selected: ' + this.selected);
-			console.log('DB Array: ' + this.dbArray);
-			console.log(this.getMapping());
-		},
 		availableCsvColumns(index) {
 			const selectedColumns = this.selected.filter(
 				(selected, selectedIndex) => selectedIndex !== index && selected !== 'none'
 			);
 			return this.csvFields.filter((csvColumn) => !selectedColumns.includes(csvColumn));
 		},
-		handleChange(index) {
-			console.log('handleChange', index);
-			this.$set(this.selected, index, this.selected[index]);
+		handleChange() {
+			//console.log('handleChange', index);
+			//this.$set(this.selected, index, this.selected[index]);
 			console.log(this.selected);
 		},
 		async getColumns() {
@@ -271,7 +256,7 @@ export default {
 					table: 'custom_table',
 				};
 			});
-			this.select(); //console.log(this.dbColumns[1][0].name);
+			this.select(); 
 		},
 	},
 };
