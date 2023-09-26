@@ -10,7 +10,7 @@
 				<h3>Asset Felder</h3>
 				<h3>CSV Felder</h3>
 			</div>
-			<div v-for="(feld, index) in dbArray" :key="index" class="fields">
+			<div v-for="(feld, index) in dbFields" :key="index" class="fields">
 				<p>{{ feld }}</p>
 				<select v-model="selected[index]" @change="handleChange()">
 					<option disabled value="">Nicht zugeordnet</option>
@@ -25,7 +25,22 @@
 				</select>
 			</div>
 			<button @click="importCSV">Import</button>
+			<div>
+				<NcPopover :focus-trap="false">
+					<template #trigger>
+						<NcButton>?</NcButton>
+					</template>
+					<template>
+						<p>Entweder Rechnungsdatum oder Inventarnummer sollte zugeordnet werden. 
+							<br>Andernfalls kann keine Inventarnummer eingefügt oder erstellt werden. <br>
+							Falls nur das Rechnungsdatum zugeordnet wird und dieses in der CSV nicht in jeder Zeile vorhanden ist, wird der Import abgebrochen.</p>
+
+					</template>
+				</NcPopover>
+			</div>
+			
 		</div>
+
 	</div>
 </template>
 
@@ -35,8 +50,14 @@ import axios from '@nextcloud/axios';
 import { generateUrl } from '@nextcloud/router';
 import fuzzysort from 'fuzzysort';
 import { postAsset, postAssets } from '../../AssetService';
+import NcPopover from '@nextcloud/vue/dist/Components/NcPopover.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 
 export default {
+	components: {
+		NcPopover,
+		NcButton,
+	},
 	props: {
 		databaseFields: {
 			type: Array,
@@ -49,10 +70,13 @@ export default {
 	data() {
 		return {
 			csvData: null,
-			dbArray: [],
+			dbFields: [],
 			defaultFelder: ['Inventarnummer', 'Rechnungsdatum', 'Seriennummer'],
 			customFelder: [],
 			csvFields: [],
+			/**
+			 * Array mit den zugeordneten CSV Feldern: dbArray ist der index und der Wert ist das zugeordnete CSV Feld
+			 */
 			selected: [],
 			dbInfo: {},
 			daten: null,
@@ -62,17 +86,17 @@ export default {
 	methods: {
 		select() {
 			console.log(t);
-			this.selected = Array(this.dbArray.length).fill('');
+			this.selected = Array(this.dbFields.length).fill('');
 		},
 		/**
 		 * Importiert die zugeordneten CSV Felder in die Datenbank
 		 */
 		async importCSV() {
 			console.log('Import CSV');
-			//Default-Felder:
-			var inventarnummer = this.selected[this.dbArray.indexOf('Inventarnummer')];
-			var rechnungsdatum = this.selected[this.dbArray.indexOf('Rechnungsdatum')];
-			var seriennummer = this.selected[this.dbArray.indexOf('Seriennummer')];
+			//Default-Feld-Zuordnungen:
+			var inventarnummer = this.selected[this.dbFields.indexOf('Inventarnummer')];
+			var rechnungsdatum = this.selected[this.dbFields.indexOf('Rechnungsdatum')];
+			var seriennummer = this.selected[this.dbFields.indexOf('Seriennummer')];
 			let allAssets = [];
 			//Gehe alle Zeilen der CSV durch
 			for (let row of this.csvData) {
@@ -85,8 +109,8 @@ export default {
 					customFieldValues: {},
 				};
 				//Schreibe CustomFieldValues aus der CSV Zuordnung in asset
-				for (let i = 3; i < this.dbArray.length; i++) {
-					asset.customFieldValues[this.dbArray[i]] = row[this.selected[i]];
+				for (let i = 3; i < this.dbFields.length; i++) {
+					asset.customFieldValues[this.dbFields[i]] = row[this.selected[i]];
 				}
 				//Füge das Asset dem Asset-Array hinzu falls es valide Werte enthält
 				if (this.hasValidValue(asset)) {
@@ -99,7 +123,8 @@ export default {
 				alert('Import von ' + JSON.stringify(response)+ ' Assets erfolgreich');
 				this.$router.push('/');
 			} catch (error) {
-				console.log('Error: ', error);
+				alert('Import fehlgeschlagen: ' + error.response.data.message + '\nBitte überprüfen Sie die CSV Datei in den Zeilen:\n'+error.response.data.zeilen);
+				console.log('Error: ', error.response.data.message);
 			}
 			//await this.postCSV(allAssets);
 			console.log('Import fertig');
@@ -170,7 +195,7 @@ export default {
 			});
 		},
 		autoMapColumns() {
-			this.dbArray.forEach((dbColumn, index) => {
+			this.dbFields.forEach((dbColumn, index) => {
 				console.log(dbColumn, index);
 				const dbColumnSanitized = dbColumn.toLowerCase().replace(/\s+/g, '');
 				const matchingCsvColumn = this.csvFields.find(
@@ -198,8 +223,8 @@ export default {
 		 */
 		getMapping() {
 			let mapping = {};
-			for (let i = 0; i < this.dbArray.length; i++) {
-				mapping[this.dbArray[i]] = this.selected[i];
+			for (let i = 0; i < this.dbFields.length; i++) {
+				mapping[this.dbFields[i]] = this.selected[i];
 			}
 			for (let type in this.dbInfo) {
 				let table = type === 'default' ? 'default_table' : 'custom_table';
@@ -246,10 +271,10 @@ export default {
 
 			this.defaultFelder.forEach((element) => {
 				console.log('Pushe: ', element);
-				this.dbArray.push(element);
+				this.dbFields.push(element);
 			});
 			this.customFelder.forEach((element) => {
-				this.dbArray.push(element.name);
+				this.dbFields.push(element.name);
 				this.daten[element.name] = {
 					field: element.name,
 					type: 'custom',

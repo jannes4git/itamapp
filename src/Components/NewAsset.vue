@@ -2,7 +2,7 @@
 	<div class="detailContent">
 		<h2 style="margin-left: 50px">Neues Asset erstellen</h2>
 		<div class="container">
-			<form>
+			<form @submit.prevent="submitForm">
 				<div class="field">
 					<label class="label"> Rechnungsdatum: </label>
 					<input class="input" type="date" v-model="rechnungsdatum" required />
@@ -36,7 +36,7 @@
 					<label class="label"> {{ field.name }}: </label>
 					<input class="input" type="text" v-model="customFieldValues[field.name]" />
 				</div>
-				<button type="submit" @click="createAsset">Erstellen</button>
+				<button type="submit" :disabled="rechnungsdatum===''">Erstellen</button>
 
 			</form>
 		</div>
@@ -75,6 +75,29 @@ export default {
 	methods: {
 		fieldValue(fieldName) {
 			return this[fieldName.toLowerCase()];
+		},
+		async submitForm(){
+			if(this.rechnungsdatum == '' || this.rechnungsdatum == null){
+				alert('Bitte Rechnungsdatum angeben');
+				return;
+			}
+			console.log('Create Asset' + this.raum.id + ' ' + this.person.id);
+			const asset = {
+				rechnungsdatum: this.rechnungsdatum,
+				seriennummer: this.seriennummer,
+				locationId: this.raum.id,
+				personId: this.person.id,
+				customFieldValues: this.customFieldValues,
+			};
+			console.log('Asset: ', asset);
+			try {
+				let response = await postAsset(asset);
+				console.log('Response: ', response.status);
+				alert('Asset erfolgreich erstellt' + JSON.stringify(response));
+				this.$router.push('/');
+			} catch (error) {
+				console.log('Error: ', error);
+			}
 		},
 		async createAsset() {
 			if(this.rechnungsdatum == '' || this.rechnungsdatum == null){

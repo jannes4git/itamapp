@@ -90,7 +90,7 @@ class CsvController extends Controller
         if (count($inventarnummerAndRechnungsdatumMissing) > 0) {
             $response = [
                 "message" => "Inventarnummer und Rechnungsdatum fehlen bei Assets.",
-                "CSV-Zeilen" => $inventarnummerAndRechnungsdatumMissing,
+                "zeilen" => $inventarnummerAndRechnungsdatumMissing,
             ];
             return new DataResponse($response, Http::STATUS_CONFLICT);
         }

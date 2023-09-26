@@ -84,7 +84,7 @@ export async function postAssets(assets) {
 		const response = await axios.post(generateUrl('/apps/itamapp/csv'), assets);
 		return response.data;
 	} catch (error) {
-		console.error(error);
+		throw error;
 	}
 }
 export async function editAsset(asset) {
