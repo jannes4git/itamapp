@@ -29,16 +29,16 @@ class CustomFieldMapper extends QBMapper
      * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
      * @throws DoesNotExistException
      */
-    /*
-    public function find(int $inventarnummer): Asset
+
+    public function find(int $id): CustomField
     {
         $qb = $this->db->getQueryBuilder();
         $qb->select('*')
-            ->from('asset')
-            ->where($qb->expr()->eq('inventarnummer', $qb->createNamedParameter($inventarnummer)));
+            ->from('custom_fields')
+            ->where($qb->expr()->eq('id', $qb->createNamedParameter($id)));
         return $this->findEntity($qb);
     }
-    */
+
 
 
     //TODO: findEntities() funktioniert nicht, weil die Klasse CustomField nicht existiert

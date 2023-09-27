@@ -13,7 +13,7 @@ export const fetchAssets = async () => {
 	console.log('fetchAssets');
 	try {
 		const response = await axios.get(generateUrl('/apps/itamapp/assets'));
-		console.log('Hallo Jannes: ' + response.data[0].seriennummer);
+		//console.log('Hallo Jannes: ' + response.data[0].seriennummer);
 		//this.inventar = response.data;
 		store.commit('setInventar', response.data);
 		//console.log('Inventar ' + store.getters.getInventar);

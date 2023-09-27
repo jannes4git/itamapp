@@ -107,11 +107,11 @@ export default {
 		Pencil,
 		Pencil,
 	},
-	beforeMount() {
+	async beforeMount() {
 		//console.log(store.getters.getAssets);
 		console.log('created App.vue');
 
-		fetchAssets();
+		await fetchAssets();
 	},
 	data() {
 		return {

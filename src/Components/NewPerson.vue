@@ -44,12 +44,10 @@ export default {
 	methods: {
 		async submitForm() {
 			if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-				console.log(this.form);
 				// Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
 				const response = await axios.post(generateUrl('/apps/itamapp/person'), {
 					name: this.form.name,
 				});
-				console.log(response);
 				this.getPersons(); // Aktualisieren Sie die Personenliste nach erfolgreichem Speichern
 			}
 		},
@@ -71,7 +69,6 @@ export default {
 		},
 	},
 	mounted() {
-		console.log('mounted');
 		this.getPersons(); // Personenliste beim Laden der Komponente abrufen
 	},
 };

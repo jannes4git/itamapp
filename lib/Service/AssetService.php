@@ -76,7 +76,16 @@ class AssetService
 
 
 		foreach ($customFieldValues as $key => $value) {
-			if ($value == null || $value == "") {
+			if ($value === null) {
+				continue;
+			}
+			if ($value == "") {
+				try {
+					$cfv = $this->customFieldValueMapper->find($key, $id);
+					$this->customFieldValueMapper->delete($cfv);
+				} catch (Exception $e) {
+					//cfv does not exist
+				}
 				continue;
 			}
 			try {
@@ -86,7 +95,7 @@ class AssetService
 			} catch (Exception $e) {
 				//cfv does not exist
 			}
-			if ($cfv == null) {
+			if ($cfv === null) {
 				$cfv = new CustomFieldValue();
 				$cfv->setAssetId($asset->getId());
 				//$id = $this->getIdForCF($key);
@@ -104,7 +113,6 @@ class AssetService
 
 	public function findAll()
 	{
-		//TODO erst noch CustomFieldValues holen und das Ergebnis der Mapper in ein DTO mappen
 		return $this->assetMapper->findAll();
 	}
 	public function findAssetOfPerson(int $personId)

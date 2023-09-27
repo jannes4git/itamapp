@@ -16,6 +16,22 @@
 			</div>
 			<button type="submit" :disabled="form.name === ''">Speichern</button>
 		</form>
+		<table>
+			<thead>
+				<tr>
+					<th><b>Name</b></th>
+					<th><b>Aktion</b></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="cf in customFields" :key="cf.id">
+					<td>{{ cf.name }}</td>
+					<td>
+						<button @click="deleteCF(cf.id, cf.name)">Löschen</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </template>
 
@@ -25,6 +41,7 @@ import { generateUrl } from '@nextcloud/router';
 export default {
 	data() {
 		return {
+			customFields: [],
 			form: {
 				name: '',
 				type: 'string',
@@ -34,8 +51,6 @@ export default {
 	methods: {
 		async submitForm() {
 			if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-				console.log(this.form);
-				// Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
 				const response = await axios.post(
 					generateUrl('/apps/itamapp/customfields'),
 					{
@@ -43,9 +58,24 @@ export default {
 						type: this.form.type,
 					}
 				);
-				console.log(response);
+				this.getCustomFields();
 			}
 		},
+		async getCustomFields() {
+			const response = await axios.get(
+				generateUrl('/apps/itamapp/customfields')
+			);
+			this.customFields = response.data[0];
+		},
+		async deleteCF(id, name) {
+			if (window.confirm('Wollen Sie das Custom Field '+name+' wirklich löschen?\Es werden auch alle zugehörigen Daten gelöscht!')) {
+				axios.delete(generateUrl('/apps/itamapp/customfields/' + id));
+				await this.getCustomFields();
+			}
+		},
+	},
+	mounted() {
+		this.getCustomFields();
 	},
 };
 </script>

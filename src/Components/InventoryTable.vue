@@ -77,7 +77,6 @@ export default {
 			selected: {},
 			loading: true,
 			//customFields: [],
-			customFieldValues: [],
 		};
 	},
 	methods: {
@@ -231,84 +230,7 @@ export default {
 		console.log('Created ' + this.inventoryList);
 	},
 	async mounted() {
-		/*
-    //TODO: get Columns und Daten
-    console.log("MOunting");
-    try {
-      const response = await axios.get(
-        generateUrl("/apps/itamapp/assets")
-      );
-      //console.log("Hallo Jannes: " + response.data.inventarnummer);
-      this.inventar = response.data;
-      console.log("Inventar "+this.inventar);
-
-    } catch (e) {
-      console.error(e);
-      showError(t("notestutorial", "Could not fetch assets"));
-    }
-    try {
-      const response = await axios.get(
-        generateUrl("/apps/itamapp/customfields")
-      );
-      //TODO: andere Möglichkeit vlt bessere Laufzeit. API call auf assets und customfields zusammen dann group by asset und halt pro zeile ein asset mit einem customfield
-      //VLT DB Prof eine Email schicken und fragen wie er es lösen würde
-      this.customFields = response.data[1];
-      this.fields = response.data[0];
-      //console.log("Fields: " +this.fields);
-      this.fields.forEach((field) => {
-        console.log("Field: " + field.name);
-      });
-
-      var groupedCustomFields = {};
-      this.customFields.forEach((field) => {
-        //console.log(" Hiier"+field.asset_id);
-        if (!groupedCustomFields[field.asset_id]) {
-          groupedCustomFields[field.asset_id] = [];
-        }
-        groupedCustomFields[field.asset_id].push(field);
-      });
-      console.log(groupedCustomFields);
-      this.inventar.forEach((asset) => {
-        var cfAsset = groupedCustomFields[asset.id];
-        cfAsset.forEach((cf) => {
-          asset[cf.name] = cf.value;
-        });
-        //console.log("Hallooooooo"+name);
-        asset.customFields = groupedCustomFields[asset.id];
-      });
-    } catch (e) {
-      console.error(e);
-      showError(t("notestutorial", "Could not fetch customfields"));
-    }
-    */
-		/*
-    console.log("Mounted Table");
-    this.inventar = store.getters.getAssets;
-    this.fields = store.getters.getCustomFields;
-    this.customFields = store.getters.getCustomFieldValues;
-    this.fields.forEach((field) => {
-      console.log("Field: " + field.name);
-    });
-
-    var groupedCustomFields = {};
-    this.customFields.forEach((field) => {
-      //console.log(" Hiier"+field.asset_id);
-      if (!groupedCustomFields[field.asset_id]) {
-        groupedCustomFields[field.asset_id] = [];
-      }
-      groupedCustomFields[field.asset_id].push(field);
-    });
-    console.log(groupedCustomFields);
-    this.inventar.forEach((asset) => {
-      var cfAsset = groupedCustomFields[asset.id];
-      cfAsset.forEach((cf) => {
-        asset[cf.name] = cf.value;
-      });
-      //console.log("Hallooooooo"+name);
-      asset.customFields = groupedCustomFields[asset.id];
-    });
-    this.loading = false;
-    */
+		
 	},
 };
 </script>

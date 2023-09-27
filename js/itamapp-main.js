@@ -19158,10 +19158,10 @@ __webpack_require__.r(__webpack_exports__);
     Pencil: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
     Pencil: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
-  beforeMount() {
+  async beforeMount() {
     //console.log(store.getters.getAssets);
     console.log('created App.vue');
-    (0,_AssetService_js__WEBPACK_IMPORTED_MODULE_13__.fetchAssets)();
+    await (0,_AssetService_js__WEBPACK_IMPORTED_MODULE_13__.fetchAssets)();
   },
   data() {
     return {
@@ -19328,24 +19328,35 @@ __webpack_require__.r(__webpack_exports__);
         link.click();
       }
     },
-    async test() {
-      console.log('Test' + this.raum);
-      console.log('CustomFieldValues: ', this.customFieldValues);
-      console.log('Inventarnummer: ', this.inventarnummer);
-      let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.editAsset)({
-        id: Number(this.$route.params.id),
-        inventarnummer: this.inventarnummer,
-        rechnungsdatum: this.rechnungsdatum,
-        seriennummer: this.seriennummer,
-        locationId: this.raum,
-        personId: this.person,
-        customFieldValues: this.customFieldValues
-      });
+    async speichern() {
+      try {
+        let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.editAsset)({
+          id: Number(this.$route.params.id),
+          inventarnummer: this.inventarnummer,
+          rechnungsdatum: this.rechnungsdatum,
+          seriennummer: this.seriennummer,
+          locationId: this.raum,
+          personId: this.person,
+          customFieldValues: this.customFieldValues
+        });
+        alert('Asset wurde bearbeitet');
+        this.$router.push('/');
+      } catch (error) {
+        console.log('Error: ', error);
+      }
       console.log('ID: ', id);
+      //fetchAssets();
     },
+
     async deleteThis() {
       console.log('Delete');
-      let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.deleteAsset)(Number(this.$route.params.id));
+      try {
+        let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.deleteAsset)(Number(this.$route.params.id));
+        alert('Asset wurde gelöscht');
+        this.$router.push('/');
+      } catch (error) {
+        console.log('Error: ', error);
+      }
       console.log('ID: ', id);
     }
   },
@@ -19706,11 +19717,11 @@ __webpack_require__.r(__webpack_exports__);
       currentPage: 1,
       assetsPerPage: 30,
       selected: {},
-      loading: true,
+      loading: true
       //customFields: [],
-      customFieldValues: []
     };
   },
+
   methods: {
     getRaumName(locationId) {
       if (Array.isArray(this.raeume)) {
@@ -19852,83 +19863,7 @@ __webpack_require__.r(__webpack_exports__);
     await (0,_AssetService__WEBPACK_IMPORTED_MODULE_3__.fetchAssets)();
     console.log('Created ' + this.inventoryList);
   },
-  async mounted() {
-    /*
-      //TODO: get Columns und Daten
-      console.log("MOunting");
-      try {
-        const response = await axios.get(
-          generateUrl("/apps/itamapp/assets")
-        );
-        //console.log("Hallo Jannes: " + response.data.inventarnummer);
-        this.inventar = response.data;
-        console.log("Inventar "+this.inventar);
-       } catch (e) {
-        console.error(e);
-        showError(t("notestutorial", "Could not fetch assets"));
-      }
-      try {
-        const response = await axios.get(
-          generateUrl("/apps/itamapp/customfields")
-        );
-        //TODO: andere Möglichkeit vlt bessere Laufzeit. API call auf assets und customfields zusammen dann group by asset und halt pro zeile ein asset mit einem customfield
-        //VLT DB Prof eine Email schicken und fragen wie er es lösen würde
-        this.customFields = response.data[1];
-        this.fields = response.data[0];
-        //console.log("Fields: " +this.fields);
-        this.fields.forEach((field) => {
-          console.log("Field: " + field.name);
-        });
-         var groupedCustomFields = {};
-        this.customFields.forEach((field) => {
-          //console.log(" Hiier"+field.asset_id);
-          if (!groupedCustomFields[field.asset_id]) {
-            groupedCustomFields[field.asset_id] = [];
-          }
-          groupedCustomFields[field.asset_id].push(field);
-        });
-        console.log(groupedCustomFields);
-        this.inventar.forEach((asset) => {
-          var cfAsset = groupedCustomFields[asset.id];
-          cfAsset.forEach((cf) => {
-            asset[cf.name] = cf.value;
-          });
-          //console.log("Hallooooooo"+name);
-          asset.customFields = groupedCustomFields[asset.id];
-        });
-      } catch (e) {
-        console.error(e);
-        showError(t("notestutorial", "Could not fetch customfields"));
-      }
-      */
-    /*
-      console.log("Mounted Table");
-      this.inventar = store.getters.getAssets;
-      this.fields = store.getters.getCustomFields;
-      this.customFields = store.getters.getCustomFieldValues;
-      this.fields.forEach((field) => {
-        console.log("Field: " + field.name);
-      });
-       var groupedCustomFields = {};
-      this.customFields.forEach((field) => {
-        //console.log(" Hiier"+field.asset_id);
-        if (!groupedCustomFields[field.asset_id]) {
-          groupedCustomFields[field.asset_id] = [];
-        }
-        groupedCustomFields[field.asset_id].push(field);
-      });
-      console.log(groupedCustomFields);
-      this.inventar.forEach((asset) => {
-        var cfAsset = groupedCustomFields[asset.id];
-        cfAsset.forEach((cf) => {
-          asset[cf.name] = cf.value;
-        });
-        //console.log("Hallooooooo"+name);
-        asset.customFields = groupedCustomFields[asset.id];
-      });
-      this.loading = false;
-      */
-  }
+  async mounted() {}
 });
 
 /***/ }),
@@ -20047,6 +19982,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data() {
     return {
+      customFields: [],
       form: {
         name: '',
         type: 'string'
@@ -20056,15 +19992,26 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     async submitForm() {
       if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-        console.log(this.form);
-        // Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
         const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].post((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/customfields'), {
           name: this.form.name,
           type: this.form.type
         });
-        console.log(response);
+        this.getCustomFields();
+      }
+    },
+    async getCustomFields() {
+      const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/customfields'));
+      this.customFields = response.data[0];
+    },
+    async deleteCF(id, name) {
+      if (window.confirm('Wollen Sie das Custom Field ' + name + ' wirklich löschen?\Es werden auch alle zugehörigen Daten gelöscht!')) {
+        _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].delete((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/customfields/' + id));
+        await this.getCustomFields();
       }
     }
+  },
+  mounted() {
+    this.getCustomFields();
   }
 });
 
@@ -20097,12 +20044,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     async submitForm() {
       if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-        console.log(this.form);
         // Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
         const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].post((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/person'), {
           name: this.form.name
         });
-        console.log(response);
         this.getPersons(); // Aktualisieren Sie die Personenliste nach erfolgreichem Speichern
       }
     },
@@ -20124,7 +20069,6 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   mounted() {
-    console.log('mounted');
     this.getPersons(); // Personenliste beim Laden der Komponente abrufen
   }
 });
@@ -20658,7 +20602,7 @@ var render = function render() {
   })], 2), _vm._v(" "), _c("button", {
     on: {
       click: function ($event) {
-        return _vm.test();
+        return _vm.speichern();
       }
     }
   }, [_vm._v("Speichern")]), _vm._v(" "), _c("button", {
@@ -21199,7 +21143,17 @@ var render = function render() {
       type: "submit",
       disabled: _vm.form.name === ""
     }
-  }, [_vm._v("Speichern")])])]);
+  }, [_vm._v("Speichern")])]), _vm._v(" "), _c("table", [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.customFields, function (cf) {
+    return _c("tr", {
+      key: cf.id
+    }, [_c("td", [_vm._v(_vm._s(cf.name))]), _vm._v(" "), _c("td", [_c("button", {
+      on: {
+        click: function ($event) {
+          return _vm.deleteCF(cf.id, cf.name);
+        }
+      }
+    }, [_vm._v("Löschen")])])]);
+  }), 0)])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -21217,6 +21171,10 @@ var staticRenderFns = [function () {
       for: "type"
     }
   }, [_c("b", [_vm._v("Typ:")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_c("b", [_vm._v("Name")])]), _vm._v(" "), _c("th", [_c("b", [_vm._v("Aktion")])])])]);
 }];
 render._withStripped = true;
 
@@ -21481,7 +21439,7 @@ const fetchAssets = async () => {
   console.log('fetchAssets');
   try {
     const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/assets'));
-    console.log('Hallo Jannes: ' + response.data[0].seriennummer);
+    //console.log('Hallo Jannes: ' + response.data[0].seriennummer);
     //this.inventar = response.data;
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setInventar', response.data);
     //console.log('Inventar ' + store.getters.getInventar);
@@ -55965,4 +55923,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=e91080a9d2324922641d
+//# sourceMappingURL=itamapp-main.js.map?v=0e06d66a7eceebc67bed

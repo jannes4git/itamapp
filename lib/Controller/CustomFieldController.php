@@ -83,6 +83,12 @@ class CustomFieldController extends Controller
      */
     public function destroy(int $id)
     {
-        // empty for now
+        try {
+            $cf = $this->mapper->find($id);
+            $this->mapper->delete($cf);
+        } catch (Exception $e) {
+            return new DataResponse([], Http::STATUS_NOT_FOUND);
+        }
+        return $id;
     }
 }

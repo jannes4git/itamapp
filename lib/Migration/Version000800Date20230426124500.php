@@ -146,6 +146,7 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 			$table->addForeignKeyConstraint($schema->getTable('person'), ['personId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_person_id_fk');
 			$table->addForeignKeyConstraint($schema->getTable('raum'), ['raumId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_raum_id_fk');
 		}
+
 		//Custom Field Values
 		if (!$schema->hasTable('custom_field_values')) {
 			$table = $schema->createTable('custom_field_values');

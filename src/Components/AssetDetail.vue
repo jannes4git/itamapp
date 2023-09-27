@@ -47,7 +47,7 @@
 			</div>
 		</div>
 
-		<button @click="test()">Speichern</button>
+		<button @click="speichern()">Speichern</button>
 		<button @click="deleteThis()">Löschen</button>
 		<button @click="generateQRCode()">QR-Code</button>
 		<qrcode-vue v-if="qrValue" :value="qrValue" ref="qrCode"></qrcode-vue>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { editAsset, deleteAsset } from '../AssetService';
+import { editAsset, deleteAsset, fetchAssets } from '../AssetService';
 import QrcodeVue from 'qrcode.vue';
 
 export default {
@@ -91,26 +91,37 @@ export default {
 				link.click();
 			}
 		},
-		async test() {
-			console.log('Test' + this.raum);
-			console.log('CustomFieldValues: ', this.customFieldValues);
-			console.log('Inventarnummer: ', this.inventarnummer);
+		async speichern() {
+				try {
+					let id = await editAsset({
+						id: Number(this.$route.params.id),
+						inventarnummer: this.inventarnummer,
+						rechnungsdatum: this.rechnungsdatum,
+						seriennummer: this.seriennummer,
+						locationId: this.raum,
+						personId: this.person,
+						customFieldValues: this.customFieldValues,
+					});
+					alert('Asset wurde bearbeitet');
+					this.$router.push('/');
+				} catch (error) {
+					console.log('Error: ', error);
+				}
 
-			let id = await editAsset({
-				id: Number(this.$route.params.id),
-				inventarnummer: this.inventarnummer,
-				rechnungsdatum: this.rechnungsdatum,
-				seriennummer: this.seriennummer,
-				locationId: this.raum,
-				personId: this.person,
-				customFieldValues: this.customFieldValues,
-			});
+			
 
 			console.log('ID: ', id);
+			//fetchAssets();
 		},
 		async deleteThis() {
 			console.log('Delete');
-			let id = await deleteAsset(Number(this.$route.params.id));
+			try {
+				let id = await deleteAsset(Number(this.$route.params.id));
+				alert('Asset wurde gelöscht');
+				this.$router.push('/');
+			} catch (error) {
+				console.log('Error: ', error);
+			}
 			console.log('ID: ', id);
 		},
 	},
