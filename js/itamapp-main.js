@@ -19329,35 +19329,37 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     async speichern() {
-      try {
-        let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.editAsset)({
-          id: Number(this.$route.params.id),
-          inventarnummer: this.inventarnummer,
-          rechnungsdatum: this.rechnungsdatum,
-          seriennummer: this.seriennummer,
-          locationId: this.raum,
-          personId: this.person,
-          customFieldValues: this.customFieldValues
-        });
-        alert('Asset wurde bearbeitet');
-        this.$router.push('/');
-      } catch (error) {
-        console.log('Error: ', error);
+      if (window.confirm('Änderungen speichern?')) {
+        try {
+          let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.editAsset)({
+            id: Number(this.$route.params.id),
+            inventarnummer: this.inventarnummer,
+            rechnungsdatum: this.rechnungsdatum,
+            seriennummer: this.seriennummer,
+            locationId: this.raum,
+            personId: this.person,
+            customFieldValues: this.customFieldValues
+          });
+          alert('Asset wurde bearbeitet');
+          this.$router.push('/');
+        } catch (error) {
+          console.log('Error: ', error);
+        }
       }
       console.log('ID: ', id);
       //fetchAssets();
     },
 
     async deleteThis() {
-      console.log('Delete');
-      try {
-        let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.deleteAsset)(Number(this.$route.params.id));
-        alert('Asset wurde gelöscht');
-        this.$router.push('/');
-      } catch (error) {
-        console.log('Error: ', error);
+      if (window.confirm('Dieses Asset wirklich löschen?')) {
+        try {
+          let id = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.deleteAsset)(Number(this.$route.params.id));
+          alert('Asset wurde gelöscht');
+          this.$router.push('/');
+        } catch (error) {
+          console.log('Error: ', error);
+        }
       }
-      console.log('ID: ', id);
     }
   },
   computed: {
@@ -19499,6 +19501,9 @@ __webpack_require__.r(__webpack_exports__);
      */
     async importCSV() {
       console.log('Import CSV');
+      if (!window.confirm('Wirklich importieren?')) {
+        return;
+      }
       //Default-Feld-Zuordnungen:
       var inventarnummer = this.selected[this.dbFields.indexOf('Inventarnummer')];
       var rechnungsdatum = this.selected[this.dbFields.indexOf('Rechnungsdatum')];
@@ -20188,14 +20193,16 @@ __webpack_require__.r(__webpack_exports__);
       console.log(JSON.stringify(this.selectedRaumIds));
     },
     async updatePersonRaum(personId) {
-      let raumId = this.selectedRaumIds[personId];
-      console.log('Update ' + personId + ' to ' + raumId);
-      if (raumId === 'null') {
-        raumId = null;
+      if (window.confirm('Wirklich ändern?')) {
+        let raumId = this.selectedRaumIds[personId];
+        console.log('Update ' + personId + ' to ' + raumId);
+        if (raumId === 'null') {
+          raumId = null;
+        }
+        const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].put((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/person/' + personId), {
+          locationId: raumId
+        });
       }
-      const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].put((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/person/' + personId), {
-        locationId: raumId
-      });
     },
     getRaumIdForPerson(personId) {
       const mapping = this.personRaum.find(rp => rp.personId === personId);
@@ -20371,6 +20378,13 @@ var render = function render() {
     }
   }, [_vm._v("Asset Detail")]), _vm._v(" "), _c("div", {
     staticClass: "container"
+  }, [_c("form", {
+    on: {
+      submit: function ($event) {
+        $event.preventDefault();
+        return _vm.speichern.apply(null, arguments);
+      }
+    }
   }, [_c("div", {
     staticClass: "field"
   }, [_c("label", {
@@ -20483,7 +20497,7 @@ var render = function render() {
       domProps: {
         value: r.id
       }
-    }, [_vm._v("\n\t\t\t\t\t" + _vm._s(r.raumName) + "\n\t\t\t\t")]);
+    }, [_vm._v("\n\t\t\t\t\t\t" + _vm._s(r.raumName) + "\n\t\t\t\t\t")]);
   })], 2)]), _vm._v(" "), _c("div", {
     staticClass: "field"
   }, [_c("label", {
@@ -20520,7 +20534,7 @@ var render = function render() {
       domProps: {
         value: p.id
       }
-    }, [_vm._v("\n\t\t\t\t\t" + _vm._s(p.name) + "\n\t\t\t\t")]);
+    }, [_vm._v("\n\t\t\t\t\t\t" + _vm._s(p.name) + "\n\t\t\t\t\t")]);
   })], 2)]), _vm._v(" "), _vm._l(_vm.customFields, function (field, index) {
     return _c("div", {
       key: index,
@@ -20599,13 +20613,11 @@ var render = function render() {
         }
       }
     })]);
-  })], 2), _vm._v(" "), _c("button", {
-    on: {
-      click: function ($event) {
-        return _vm.speichern();
-      }
+  }), _vm._v(" "), _c("button", {
+    attrs: {
+      type: "submit"
     }
-  }, [_vm._v("Speichern")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("Speichern")])], 2)]), _vm._v(" "), _c("button", {
     on: {
       click: function ($event) {
         return _vm.deleteThis();
@@ -21352,7 +21364,7 @@ var render = function render() {
     staticStyle: {
       "margin-left": "50px"
     }
-  }, [_vm._v("Person Raum Wechsel")]), _vm._v(" "), _vm._l(_vm.personen, function (person) {
+  }, [_vm._v("Person-Raum-Wechsel")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _vm._l(_vm.personen, function (person) {
     return _vm.personRaum ? _c("div", {
       key: person.id,
       staticClass: "field"
@@ -21402,7 +21414,17 @@ var render = function render() {
     }, [_vm._v("Ändern")])]) : _vm._e();
   })], 2);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "field"
+  }, [_c("h3", {
+    staticClass: "label"
+  }, [_c("u", [_vm._v("Person")])]), _vm._v(" "), _c("h3", {
+    staticClass: "input"
+  }, [_c("u", [_vm._v("Raum")])])]);
+}];
 render._withStripped = true;
 
 
@@ -55923,4 +55945,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=0e06d66a7eceebc67bed
+//# sourceMappingURL=itamapp-main.js.map?v=38f5a22b89af88680838

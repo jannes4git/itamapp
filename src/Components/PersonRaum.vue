@@ -1,6 +1,10 @@
 <template>
 	<div class="container">
-		<h2 style="margin-left: 50px">Person Raum Wechsel</h2>
+		<h2 style="margin-left: 50px">Person-Raum-Wechsel</h2>
+		<div class="field">
+			<h3 class="label"><u>Person</u></h3>
+			<h3 class="input"><u>Raum</u></h3>
+		</div>
 		<div class="field" v-if="personRaum" v-for="person in personen" :key="person.id">
 			<span class="label">{{ person.name }}:</span>
 
@@ -58,14 +62,17 @@ export default {
 			console.log(JSON.stringify(this.selectedRaumIds));
 		},
 		async updatePersonRaum(personId) {
-			let raumId = this.selectedRaumIds[personId];
-			console.log('Update ' + personId + ' to ' + raumId);
-			if (raumId === 'null') {
-				raumId = null;
+			if(window.confirm('Wirklich ändern?')){
+				let raumId = this.selectedRaumIds[personId];
+				console.log('Update ' + personId + ' to ' + raumId);
+				if (raumId === 'null') {
+					raumId = null;
+				}
+				const response = await axios.put(generateUrl('/apps/itamapp/person/'+personId), {
+					locationId: raumId,
+				});
 			}
-			const response = await axios.put(generateUrl('/apps/itamapp/person/'+personId), {
-				locationId: raumId,
-			});
+			
 		},
 		getRaumIdForPerson(personId) {
 			const mapping = this.personRaum.find((rp) => rp.personId === personId);

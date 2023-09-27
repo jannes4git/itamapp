@@ -3,51 +3,54 @@
 		<h2 style="margin-left: 50px">Asset Detail</h2>
 
 		<div class="container">
-			<div class="field">
-				<label class="label">Inventarnummer</label>
-				<input class="input" v-model="inventarnummer" type="text" disabled />
-			</div>
+			<form @submit.prevent="speichern">
 
-			<div class="field">
-				<label class="label">Rechnungsdatum:</label>
-				<input class="input" v-model="rechnungsdatum" type="date" />
-			</div>
+				<div class="field">
+					<label class="label">Inventarnummer</label>
+					<input class="input" v-model="inventarnummer" type="text" disabled />
+				</div>
 
-			<div class="field">
-				<label class="label">Seriennummer:</label>
-				<input class="input" v-model="seriennummer" type="text" />
-			</div>
+				<div class="field">
+					<label class="label">Rechnungsdatum:</label>
+					<input class="input" v-model="rechnungsdatum" type="date" />
+				</div>
 
-			<div class="field">
-				<label class="label" for="raum">Raum:</label>
-				<select class="input" id="raum" v-model="raum">
-					<option value="null">Kein Raum</option>
-					<option v-for="r in raeume" :value="r.id" :key="r.id">
-						{{ r.raumName }}
-					</option>
-				</select>
-			</div>
+				<div class="field">
+					<label class="label">Seriennummer:</label>
+					<input class="input" v-model="seriennummer" type="text" />
+				</div>
 
-			<div class="field">
-				<label class="label">Person:</label>
-				<select class="input" id="person" v-model="person">
-					<option value="null">Keine Person</option>
-					<option v-for="p in personen" :value="p.id" :key="p.id">
-						{{ p.name }}
-					</option>
-				</select>
-			</div>
+				<div class="field">
+					<label class="label" for="raum">Raum:</label>
+					<select class="input" id="raum" v-model="raum">
+						<option value="null">Kein Raum</option>
+						<option v-for="r in raeume" :value="r.id" :key="r.id">
+							{{ r.raumName }}
+						</option>
+					</select>
+				</div>
 
-			<div class="field" v-for="(field, index) in customFields" :key="index">
-				<label class="label"> {{ field.name }}: </label>
-				<input
-					class="input"
-					:type="field.type === 'int' ? 'text' : field.type"
-					v-model="customFieldValues[field.id]" />
-			</div>
+				<div class="field">
+					<label class="label">Person:</label>
+					<select class="input" id="person" v-model="person">
+						<option value="null">Keine Person</option>
+						<option v-for="p in personen" :value="p.id" :key="p.id">
+							{{ p.name }}
+						</option>
+					</select>
+				</div>
+
+				<div class="field" v-for="(field, index) in customFields" :key="index">
+					<label class="label"> {{ field.name }}: </label>
+					<input
+						class="input"
+						:type="field.type === 'int' ? 'text' : field.type"
+						v-model="customFieldValues[field.id]" />
+				</div>
+				<button type="submit">Speichern</button>
+			</form>
 		</div>
 
-		<button @click="speichern()">Speichern</button>
 		<button @click="deleteThis()">Löschen</button>
 		<button @click="generateQRCode()">QR-Code</button>
 		<qrcode-vue v-if="qrValue" :value="qrValue" ref="qrCode"></qrcode-vue>
@@ -92,6 +95,7 @@ export default {
 			}
 		},
 		async speichern() {
+			if (window.confirm('Änderungen speichern?')) {
 				try {
 					let id = await editAsset({
 						id: Number(this.$route.params.id),
@@ -107,22 +111,22 @@ export default {
 				} catch (error) {
 					console.log('Error: ', error);
 				}
-
-			
-
+			}
 			console.log('ID: ', id);
 			//fetchAssets();
 		},
 		async deleteThis() {
-			console.log('Delete');
-			try {
-				let id = await deleteAsset(Number(this.$route.params.id));
-				alert('Asset wurde gelöscht');
-				this.$router.push('/');
-			} catch (error) {
-				console.log('Error: ', error);
+			
+			if (window.confirm('Dieses Asset wirklich löschen?')) {
+				try {
+					let id = await deleteAsset(Number(this.$route.params.id));
+					alert('Asset wurde gelöscht');
+					this.$router.push('/');
+				} catch (error) {
+					console.log('Error: ', error);
+				}
 			}
-			console.log('ID: ', id);
+
 		},
 	},
 

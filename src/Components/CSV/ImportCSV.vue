@@ -93,6 +93,9 @@ export default {
 		 */
 		async importCSV() {
 			console.log('Import CSV');
+			if(!window.confirm('Wirklich importieren?')){
+				return;
+			}
 			//Default-Feld-Zuordnungen:
 			var inventarnummer = this.selected[this.dbFields.indexOf('Inventarnummer')];
 			var rechnungsdatum = this.selected[this.dbFields.indexOf('Rechnungsdatum')];
