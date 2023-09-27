@@ -124,7 +124,6 @@ export default {
 				this.$router.push('/');
 			} catch (error) {
 				alert('Import fehlgeschlagen: ' + error.response.data.message + '\nBitte überprüfen Sie die CSV Datei in den Zeilen:\n'+error.response.data.zeilen);
-				console.log('Error: ', error.response.data.message);
 			}
 			//await this.postCSV(allAssets);
 			console.log('Import fertig');

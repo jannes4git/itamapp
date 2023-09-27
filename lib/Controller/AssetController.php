@@ -27,7 +27,11 @@ class AssetController extends Controller
     public function index(): DataResponse
     {
         //$columns = $this->mapper->getColumns();
-        $data = $this->assetService->findAll();
+        try {
+            $data = $this->assetService->findAll();
+        } catch (Exception $e) {
+            return new DataResponse($e->getMessage(), Http::STATUS_NOT_FOUND);
+        }
         //return new DataResponse(array($columns, $data));
         return new DataResponse($data);
     }

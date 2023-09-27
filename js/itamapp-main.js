@@ -19519,7 +19519,6 @@ __webpack_require__.r(__webpack_exports__);
         this.$router.push('/');
       } catch (error) {
         alert('Import fehlgeschlagen: ' + error.response.data.message + '\nBitte überprüfen Sie die CSV Datei in den Zeilen:\n' + error.response.data.zeilen);
-        console.log('Error: ', error.response.data.message);
       }
       //await this.postCSV(allAssets);
       console.log('Import fertig');
@@ -55966,4 +55965,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=40aae662ab5d422695c7
+//# sourceMappingURL=itamapp-main.js.map?v=e91080a9d2324922641d

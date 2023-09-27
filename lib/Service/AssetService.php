@@ -10,27 +10,25 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OCA\ItamApp\Db\Asset;
 use OCA\ItamApp\Db\AssetMapper;
-use OCA\ItamApp\Db\AssetDTOMapper;
 use OCA\ItamApp\Db\CustomFieldMapper;
 use OCA\ItamApp\Db\CustomFieldValue;
 use OCA\ItamApp\Db\CustomFieldValueMapper;
 use OCA\ItamApp\Db\RaumMapper;
+
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 
 class AssetService
 {
 	private AssetMapper $assetMapper;
-	private AssetDTOMapper $assetDTOMapper;
 	private CustomFieldValueMapper $customFieldValueMapper;
 	private CustomFieldMapper $customFieldMapper;
 
-	public function __construct(AssetMapper $assetMapper, AssetDTOMapper $assetDTOMapper, CustomFieldValueMapper $customFieldValueMapper, CustomFieldMapper $customFieldMapper)
+	public function __construct(AssetMapper $assetMapper, CustomFieldValueMapper $customFieldValueMapper, CustomFieldMapper $customFieldMapper)
 	{
 		$this->assetMapper = $assetMapper;
 		$this->customFieldValueMapper = $customFieldValueMapper;
 		$this->customFieldMapper = $customFieldMapper;
-		$this->assetDTOMapper = $assetDTOMapper;
 	}
 
 	public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
