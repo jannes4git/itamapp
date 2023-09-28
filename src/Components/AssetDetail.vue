@@ -152,12 +152,16 @@ export default {
 			);
 		},
 	},
+	/**
+	 * Übernehme Daten des Assets in die Datenfelder
+	 */
 	beforeMount() {
 		this.inventarnummer = this.inventar.inventarnummer;
 		this.rechnungsdatum = this.inventar.rechnungsdatum;
 		this.seriennummer = this.inventar.seriennummer;
 		this.raum = this.inventar.locationId;
 		this.person = this.inventar.personId;
+		
 		this.customFields.forEach((field) => {
 			let value = this.customFieldValuesFetch.find((value) => value.name === field.name);
 			this.customFieldValues[field.id] = value ? value.value : '';
@@ -170,18 +174,18 @@ export default {
 		});
 		console.log('Seiten URL ' + window.location.href);
 	},
+	/**
+	 * Aktualisiere die Daten falls sie sich ändern. (hier eingebaut um Daten bei Reload der Seite zu übernehmen)
+	 */
 	watch: {
-		inventar: {
-			handler(newVal, oldVal) {
-				//console.log("Inventar: ", JSON.stringify(newVal));
+		inventar(newVal, oldVal) {
 				this.inventarnummer = newVal.inventarnummer;
 				this.rechnungsdatum = newVal.rechnungsdatum;
 				this.seriennummer = newVal.seriennummer;
 				this.raum = newVal.locationId;
 				this.person = newVal.personId;
 				this.loading = false;
-			},
-			deep: true,
+			
 		},
 		raeume(newVal, oldVal) {
 			console.log('Räume: ', JSON.stringify(newVal));

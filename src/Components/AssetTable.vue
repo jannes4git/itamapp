@@ -257,6 +257,11 @@ table td {
 	text-align: left;
 	border: 1px solid #c5c3c3;
 }
+td {
+	max-width: 250px; /* beschränke die Breite der Spalte */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .table--hoverable tbody tr:hover {
 	background-color: #f4f8fd;
