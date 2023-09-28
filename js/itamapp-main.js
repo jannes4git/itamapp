@@ -19315,12 +19315,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     async generateQRCode() {
+      //setze QR-Code Value auf aktuelle URL
       this.qrValue = window.location.href;
       await this.$nextTick();
       const qrElement = this.$refs.qrCode.$el.querySelector('canvas');
+      //Erstelle Link zum Download und lade QR-Code herunter
       if (qrElement) {
         const link = document.createElement('a');
-        link.download = this.inventarnummer + 'Qrcode.png';
+        link.download = this.inventarnummer + '_QRCode.png';
         link.href = qrElement.toDataURL('image/png');
         link.click();
       }
@@ -55928,4 +55930,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=0644e5d15f76da4c1d95
+//# sourceMappingURL=itamapp-main.js.map?v=68ad81409cf72261761a

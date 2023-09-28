@@ -8,7 +8,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
-use OCP\AppFramework\Http\JSONResponse;
 
 class AssetController extends Controller
 {
@@ -59,8 +58,6 @@ class AssetController extends Controller
      */
     public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
     {
-        //$data = 'test';
-        //$data = json_decode(file_get_contents('php://input'), true);
         if ($inventarnummer == null || $inventarnummer == "") {
             $inventarnummer = $this->assetService->generateInventarnummer($rechnungsdatum);
         } else {
@@ -76,12 +73,6 @@ class AssetController extends Controller
         } catch (Exception $e) {
             return new DataResponse($e->getMessage(), Http::STATUS_CONFLICT);
         }
-        //$asset = new Asset();
-        //$asset->setBeschreibung($beschreibung);
-        //$asset->setRechnungsdatum($rechnungsdatum);
-        //$asset->setInventarnummer($inventarnummer);
-
-        //$customFieldSize = sizeof($data['customFields']);
 
         return new DataResponse(array("inventarnummer" => $invNum), Http::STATUS_CREATED);
     }

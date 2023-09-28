@@ -80,14 +80,16 @@ export default {
 	},
 	methods: {
 		async generateQRCode() {
+			//setze QR-Code Value auf aktuelle URL
 			this.qrValue = window.location.href;
 
 			await this.$nextTick();
 
 			const qrElement = this.$refs.qrCode.$el.querySelector('canvas');
+			//Erstelle Link zum Download und lade QR-Code herunter
 			if (qrElement) {
 				const link = document.createElement('a');
-				link.download = this.inventarnummer+'Qrcode.png';
+				link.download = this.inventarnummer+'_QRCode.png';
 				link.href = qrElement.toDataURL('image/png');
 				link.click();
 			}

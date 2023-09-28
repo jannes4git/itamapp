@@ -49,7 +49,7 @@ const routes = [
 ];
 
 export default new VueRouter({
-	//mode: "history", //warum gehts mit history nicht url einfügen in browser?
+	//mode: "history", 
 	base: generateUrl('apps/itamapp'),
 	linkActiveClass: 'active',
 	routes,

@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace OCA\ItamApp\Service;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 use OCA\ItamApp\Db\Asset;
 use OCA\ItamApp\Db\AssetMapper;
 use OCA\ItamApp\Db\CustomFieldMapper;
 use OCA\ItamApp\Db\CustomFieldValue;
 use OCA\ItamApp\Db\CustomFieldValueMapper;
-use OCA\ItamApp\Db\RaumMapper;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -28,7 +26,9 @@ class AssetService
 		$this->customFieldValueMapper = $customFieldValueMapper;
 		$this->customFieldMapper = $customFieldMapper;
 	}
-
+	/**
+	 * Erstellt ein Asset.
+	 */
 	public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
 	{
 		try {
@@ -57,6 +57,9 @@ class AssetService
 
 		return $asset->getInventarnummer();
 	}
+	/**
+	 * Aktualisiert ein Asset.
+	 */
 	public function update(int $id, string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
 	{
 		try {
@@ -147,41 +150,20 @@ class AssetService
 		}
 	}
 
+	/**
+	 * Generiert die Inventarnummer anhand des Rechnungsdatums und einer fortlaufenden Nummer.
+	 * @param string $date Rechnungsdatum
+	 */
 	public function generateInventarnummer(?string $date)
 	{
 		if ($date == null) {
-			//$date = date("Y-m-d");
 			throw new Exception("Rechnungsdatum fehlt bei Asset");
 		}
-		//$inventarnummer = $this->assetMapper->getInventarnummer($date);
-		//$inventarnummer = $inventarnummer + 1;
-		//$inventarnummer = $date . '-' . $inventarnummer;
+
+		//trenne ggf. Uhrzeit ab
 		$date = explode(" ", $date)[0];
 		$connection = \OC::$server->getDatabaseConnection();
 		$queryBuilder = $connection->getQueryBuilder();
-		/*
-		$queryBuilder->select('inventarnummer')
-			->from('asset')
-			->where($queryBuilder->expr()->like('inventarnummer', $queryBuilder->createNamedParameter($date . '.%')))
-			->orderBy('inventarnummer', 'DESC')
-			->setMaxResults(1);
-
-	
-
-		$result = $queryBuilder->execute();
-		$row = $result->fetch();
-
-
-		$highest_number = 0;
-		if ($row) {
-			$parts = explode('.', $row['inventarnummer']);
-			if (count($parts) == 2 && is_numeric($parts[1])) {
-				$highest_number = intval($parts[1]);
-			}
-		}
-		*/
-		//geändert da obere Variante aufgrund von lexi? nur bis 99 funktioniert
-		// Inkrementieren Sie die Nummer und erstellen Sie die neue Inventarnummer
 		$queryBuilder->select('inventarnummer')
 			->from('asset')
 			->where($queryBuilder->expr()->like('inventarnummer', $queryBuilder->createNamedParameter($date . '.%')));
@@ -204,6 +186,10 @@ class AssetService
 		return $new_inventarnummer;
 	}
 
+	/**
+	 * Überprüft, ob eine Inventarnummer bereits existiert.
+	 * @param string $inventarnummer Inventarnummer
+	 */
 	public function inventarnummerExistsCheck(string $inventarnummer)
 	{
 		$connection = \OC::$server->getDatabaseConnection();
