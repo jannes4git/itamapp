@@ -10,6 +10,6 @@ npm install
 
 npm run dev
 
--> Now the app can be activated in +App-Settings
+&rarr; Now the app can be activated in +App-Settings
 
 # itamapp
