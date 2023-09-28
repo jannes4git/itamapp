@@ -3,14 +3,12 @@
 namespace OCA\ItamApp\Controller;
 
 use Exception;
-use OCA\ItamApp\Db\Asset;
 use OCP\AppFramework\Http;
 use OCA\ItamApp\Service\AssetService;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
-use OCA\User_LDAP;
-use OCA\User_LDAP\User_LDAP as User_LDAPUser_LDAP;
+
 
 class CsvController extends Controller
 {

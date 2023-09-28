@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-    <!--
-    SPDX-FileCopyrightText: Jannes Lensch <jannes.lensch@web.de>
-    SPDX-License-Identifier: CC0-1.0
-    -->
+    
     <id>itamapp</id>
     <name>Itam App</name>
     <summary>IT asset management application</summary>

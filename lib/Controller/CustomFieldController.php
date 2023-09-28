@@ -3,7 +3,6 @@
 namespace OCA\ItamApp\Controller;
 
 use Exception;
-use OCA\ItamApp\Db\Asset;
 use OCA\ItamApp\Db\CustomField;
 use OCP\AppFramework\Http;
 use OCA\ItamApp\Db\CustomFieldMapper;
