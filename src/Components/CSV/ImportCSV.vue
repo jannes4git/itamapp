@@ -58,12 +58,6 @@ export default {
 		NcPopover,
 		NcButton,
 	},
-	props: {
-		databaseFields: {
-			type: Array,
-			required: true,
-		},
-	},
 	async mounted() {
 		await this.getColumns();
 	},
@@ -79,7 +73,6 @@ export default {
 			 */
 			selected: [],
 			dbInfo: {},
-			daten: null,
 		};
 	},
 	created() {},
@@ -93,7 +86,7 @@ export default {
 		 */
 		async importCSV() {
 			console.log('Import CSV');
-			if(!window.confirm('Wirklich importieren?')){
+			if(!window.confirm('CSV wird importiert')){
 				return;
 			}
 			//Default-Feld-Zuordnungen:
@@ -122,7 +115,6 @@ export default {
 			}
 			try{
 				let response = await postAssets(allAssets);
-				console.log('Response: ', response.status);
 				alert('Import von ' + JSON.stringify(response)+ ' Assets erfolgreich');
 				this.$router.push('/');
 			} catch (error) {
@@ -132,7 +124,7 @@ export default {
 			console.log('Import fertig');
 		},
 		/**
-		 * Check ob ein Asset gültige Werte hat
+		 * Check ob ein Asset gültige Werte hat.
 		 * @param {*} asset 
 		 */
 		hasValidValue(asset) {
@@ -197,25 +189,32 @@ export default {
 			});
 		},
 		autoMapColumns() {
-			this.dbFields.forEach((dbColumn, index) => {
-				console.log(dbColumn, index);
-				const dbColumnSanitized = dbColumn.toLowerCase().replace(/\s+/g, '');
+			this.dbFields.forEach((dbField, index) => {
+				//Überprüfe auf direkte Übereinstimmung
+				const dbFieldForCheck = dbField.toLowerCase().replace(/\s+/g, '');
 				const matchingCsvColumn = this.csvFields.find(
-					(csvColumn) => csvColumn.toLowerCase().replace(/\s+/g, '') === dbColumnSanitized
+					(csvField) => csvField.toLowerCase().replace(/\s+/g, '') === dbFieldForCheck
 				);
 				if (matchingCsvColumn) {
 					this.selected[index] = matchingCsvColumn;
 				} else {
+					//Überprüfe auf ähnliche Übereinstimmung
 					const bestMatch = fuzzysort.go(
-						dbColumnSanitized,
-						this.csvFields.map((csvColumn) =>
-							csvColumn.toLowerCase().replace(/\s+/g, '')
+						dbFieldForCheck,
+						this.csvFields.map((csvField) =>
+							csvField.toLowerCase().replace(/\s+/g, '')
 						),
 						{ limit: 1 }
 					)[0];
-					if (bestMatch && bestMatch.score > -10000) {
-						// Sie können den Schwellenwert anpassen, um die Sensibilität des Fuzzy-Matching zu steuern
-						this.selected[index] = this.csvFields[bestMatch.index];
+					console.log(bestMatch);
+					//Überprüfe ob Übereinstimmung besteht und ob der Schwellenwert erreicht wurde
+					if (bestMatch && bestMatch.score > -4) {
+						const matchingIndex = this.csvFields.findIndex(
+							csvColumn => csvColumn.toLowerCase().replace(/\s+/g, '') === bestMatch.target
+						);
+						if (matchingIndex !== -1) {
+							this.selected[index] = this.csvFields[matchingIndex];
+						} 
 					}
 				}
 			});
@@ -246,25 +245,6 @@ export default {
 			console.log(this.selected);
 		},
 		async getColumns() {
-			this.daten = {
-				Inventarnummer: {
-					field: 'inventarnummer',
-					type: 'default',
-					table: 'default_table',
-				},
-				Seriennummer: {
-					field: 'seriennummer',
-					type: 'default',
-					table: 'default_table',
-				},
-				Raum: { field: 'raum', type: 'default', table: 'default_table' },
-				Rechnungsdatum: {
-					field: 'rechnungsdatum',
-					type: 'default',
-					table: 'default_table',
-				},
-			};
-			//const columns = (await axios.get(generateUrl("/apps/itamapp/meta"))).data;
 			var columnsDB = (await axios.get(generateUrl('/apps/itamapp/meta'))).data;
 			//console.log(this.dbColumns[0][0].COLUMN_NAME);
 			//TODO: Defaultfelder vielleicht hardcoden und nicht fetchen? -> ja machen!
@@ -277,11 +257,6 @@ export default {
 			});
 			this.customFelder.forEach((element) => {
 				this.dbFields.push(element.name);
-				this.daten[element.name] = {
-					field: element.name,
-					type: 'custom',
-					table: 'custom_table',
-				};
 			});
 			this.select(); 
 		},

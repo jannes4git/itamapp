@@ -109,7 +109,6 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 
 			$assetTable->setPrimaryKey(['id']);
 			$assetTable->addUniqueIndex(['inventarnummer'], 'asset_inventarnummer_unique');
-			//hier das onDelete ergänzt
 			$assetTable->addForeignKeyConstraint($schema->getTable('raum'), ['locationId'], ['id'], ['onUpdate' => 'CASCADE', 'onDelete' => 'SET NULL'], 'location_fk');
 			$assetTable->addForeignKeyConstraint($schema->getTable('person'), ['personId'], ['id'], [
 				'onDelete' => 'SET NULL',
@@ -124,7 +123,8 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 
 
 		//Raum-Person Table
-		if (!$schema->hasTable('person_raum')) {
+		/**
+		 if (!$schema->hasTable('person_raum')) {
 			$table = $schema->createTable('person_raum');
 			$table->addColumn('id', 'integer', [
 				'autoincrement' => true,
@@ -146,6 +146,8 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 			$table->addForeignKeyConstraint($schema->getTable('person'), ['personId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_person_id_fk');
 			$table->addForeignKeyConstraint($schema->getTable('raum'), ['raumId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_raum_id_fk');
 		}
+		 */
+
 
 		//Custom Field Values
 		if (!$schema->hasTable('custom_field_values')) {

@@ -19466,12 +19466,6 @@ __webpack_require__.r(__webpack_exports__);
     NcPopover: (_nextcloud_vue_dist_Components_NcPopover_js__WEBPACK_IMPORTED_MODULE_5___default()),
     NcButton: (_nextcloud_vue_dist_Components_NcButton_js__WEBPACK_IMPORTED_MODULE_6___default())
   },
-  props: {
-    databaseFields: {
-      type: Array,
-      required: true
-    }
-  },
   async mounted() {
     await this.getColumns();
   },
@@ -19486,8 +19480,7 @@ __webpack_require__.r(__webpack_exports__);
        * Array mit den zugeordneten CSV Feldern: dbArray ist der index und der Wert ist das zugeordnete CSV Feld
        */
       selected: [],
-      dbInfo: {},
-      daten: null
+      dbInfo: {}
     };
   },
   created() {},
@@ -19501,7 +19494,7 @@ __webpack_require__.r(__webpack_exports__);
      */
     async importCSV() {
       console.log('Import CSV');
-      if (!window.confirm('Wirklich importieren?')) {
+      if (!window.confirm('CSV wird importiert')) {
         return;
       }
       //Default-Feld-Zuordnungen:
@@ -19530,7 +19523,6 @@ __webpack_require__.r(__webpack_exports__);
       }
       try {
         let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_4__.postAssets)(allAssets);
-        console.log('Response: ', response.status);
         alert('Import von ' + JSON.stringify(response) + ' Assets erfolgreich');
         this.$router.push('/');
       } catch (error) {
@@ -19540,7 +19532,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log('Import fertig');
     },
     /**
-     * Check ob ein Asset gültige Werte hat
+     * Check ob ein Asset gültige Werte hat.
      * @param {*} asset 
      */
     hasValidValue(asset) {
@@ -19600,19 +19592,24 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     autoMapColumns() {
-      this.dbFields.forEach((dbColumn, index) => {
-        console.log(dbColumn, index);
-        const dbColumnSanitized = dbColumn.toLowerCase().replace(/\s+/g, '');
-        const matchingCsvColumn = this.csvFields.find(csvColumn => csvColumn.toLowerCase().replace(/\s+/g, '') === dbColumnSanitized);
+      this.dbFields.forEach((dbField, index) => {
+        //Überprüfe auf direkte Übereinstimmung
+        const dbFieldForCheck = dbField.toLowerCase().replace(/\s+/g, '');
+        const matchingCsvColumn = this.csvFields.find(csvField => csvField.toLowerCase().replace(/\s+/g, '') === dbFieldForCheck);
         if (matchingCsvColumn) {
           this.selected[index] = matchingCsvColumn;
         } else {
-          const bestMatch = fuzzysort__WEBPACK_IMPORTED_MODULE_3___default().go(dbColumnSanitized, this.csvFields.map(csvColumn => csvColumn.toLowerCase().replace(/\s+/g, '')), {
+          //Überprüfe auf ähnliche Übereinstimmung
+          const bestMatch = fuzzysort__WEBPACK_IMPORTED_MODULE_3___default().go(dbFieldForCheck, this.csvFields.map(csvField => csvField.toLowerCase().replace(/\s+/g, '')), {
             limit: 1
           })[0];
-          if (bestMatch && bestMatch.score > -10000) {
-            // Sie können den Schwellenwert anpassen, um die Sensibilität des Fuzzy-Matching zu steuern
-            this.selected[index] = this.csvFields[bestMatch.index];
+          console.log(bestMatch);
+          //Überprüfe ob Übereinstimmung besteht und ob der Schwellenwert erreicht wurde
+          if (bestMatch && bestMatch.score > -4) {
+            const matchingIndex = this.csvFields.findIndex(csvColumn => csvColumn.toLowerCase().replace(/\s+/g, '') === bestMatch.target);
+            if (matchingIndex !== -1) {
+              this.selected[index] = this.csvFields[matchingIndex];
+            }
           }
         }
       });
@@ -19641,29 +19638,6 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.selected);
     },
     async getColumns() {
-      this.daten = {
-        Inventarnummer: {
-          field: 'inventarnummer',
-          type: 'default',
-          table: 'default_table'
-        },
-        Seriennummer: {
-          field: 'seriennummer',
-          type: 'default',
-          table: 'default_table'
-        },
-        Raum: {
-          field: 'raum',
-          type: 'default',
-          table: 'default_table'
-        },
-        Rechnungsdatum: {
-          field: 'rechnungsdatum',
-          type: 'default',
-          table: 'default_table'
-        }
-      };
-      //const columns = (await axios.get(generateUrl("/apps/itamapp/meta"))).data;
       var columnsDB = (await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_2__.generateUrl)('/apps/itamapp/meta'))).data;
       //console.log(this.dbColumns[0][0].COLUMN_NAME);
       //TODO: Defaultfelder vielleicht hardcoden und nicht fetchen? -> ja machen!
@@ -19675,11 +19649,6 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.customFelder.forEach(element => {
         this.dbFields.push(element.name);
-        this.daten[element.name] = {
-          field: element.name,
-          type: 'custom',
-          table: 'custom_table'
-        };
       });
       this.select();
     }
@@ -55945,4 +55914,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=38f5a22b89af88680838
+//# sourceMappingURL=itamapp-main.js.map?v=8e61300d284b6b6ae22b
