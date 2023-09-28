@@ -9,7 +9,6 @@
 
 			<button type="submit" :disabled="form.name === ''">Speichern</button>
 		</form>
-		<!-- Personen-Tabelle -->
 		<table>
 			<thead>
 				<tr>
@@ -44,19 +43,16 @@ export default {
 	methods: {
 		async submitForm() {
 			if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-				console.log(this.form);
-				// Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
 				const response = await axios.post(generateUrl('/apps/itamapp/raum'), {
 					name: this.form.name,
 				});
 				console.log(response);
-				this.getRaueme(); // Aktualisieren Sie die Personenliste nach erfolgreichem Speichern
+				this.getRaueme();
 			}
 		},
 		async getRaueme() {
 			console.log('getRaeume');
 			const response = await axios.get(generateUrl('/apps/itamapp/raum'));
-			console.log(response);
 			this.raeume = response.data;
 		},
 		async deleteRaum(id) {
@@ -65,14 +61,13 @@ export default {
 					generateUrl(`/apps/itamapp/raum/${id}`)
 				);
 				if (response.status === 200) {
-					this.getRaueme(); // Aktualisieren Sie die Personenliste nach erfolgreichem Löschen
+					this.getRaueme();
 				}
 			}
 		},
 	},
 	mounted() {
-		console.log('mounted');
-		this.getRaueme(); // Personenliste beim Laden der Komponente abrufen
+		this.getRaueme();
 	},
 };
 </script>

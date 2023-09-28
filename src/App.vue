@@ -88,7 +88,7 @@ import '@nextcloud/dialogs/styles/toast.scss';
 import { generateUrl } from '@nextcloud/router';
 import { showError, showSuccess } from '@nextcloud/dialogs';
 import axios from '@nextcloud/axios';
-import InventoryTable from './Components/InventoryTable.vue';
+import AssetTable from './Components/AssetTable.vue';
 
 import { fetchAssets } from './AssetService.js';
 import store from './store/store';
@@ -102,7 +102,7 @@ export default {
 		NcAppNavigation,
 		NcAppNavigationItem,
 		NcAppNavigationNew,
-		InventoryTable,
+		AssetTable,
 		PlusIcon,
 		Pencil,
 		Pencil,

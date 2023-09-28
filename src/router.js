@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ImportCSV from './Components/CSV/ImportCSV.vue';
-import InventoryTable from './Components/InventoryTable.vue';
+import AssetTable from './Components/AssetTable.vue';
 import NewAsset from './Components/NewAsset.vue';
 import NewCustomField from './Components/NewCustomField.vue';
 import AssetDetail from './Components/AssetDetail.vue';
@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: '/',
-		component: InventoryTable,
+		component: AssetTable,
 	},
 	{
 		path: '/importCSV',

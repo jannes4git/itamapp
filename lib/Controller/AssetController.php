@@ -57,11 +57,19 @@ class AssetController extends Controller
      * @param string $rechnungsdatum
      * @param string|null $beschreibung
      */
-    public function create(string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
+    public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
     {
         //$data = 'test';
         //$data = json_decode(file_get_contents('php://input'), true);
-        $inventarnummer = $this->assetService->generateInventarnummer($rechnungsdatum);
+        if ($inventarnummer == null || $inventarnummer == "") {
+            $inventarnummer = $this->assetService->generateInventarnummer($rechnungsdatum);
+        } else {
+            $exists = $this->assetService->inventarnummerExistsCheck($inventarnummer);
+        }
+        if ($exists) {
+            return new DataResponse("Inventarnummer " . $inventarnummer . " existiert bereits", Http::STATUS_CONFLICT);
+        }
+
 
         try {
             $invNum = $this->assetService->create($inventarnummer, $rechnungsdatum, $seriennummer, $locationId, $personId, $customFieldValues);

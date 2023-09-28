@@ -9,7 +9,6 @@
 
 			<button type="submit" :disabled="form.name === ''">Speichern</button>
 		</form>
-		<!-- Personen-Tabelle -->
 		<table>
 			<thead>
 				<tr>
@@ -44,11 +43,10 @@ export default {
 	methods: {
 		async submitForm() {
 			if (window.confirm(this.form.name + ' wirklich erstellen?')) {
-				// Hier können Sie dann Ihre Logik zum Speichern der Daten einfügen
 				const response = await axios.post(generateUrl('/apps/itamapp/person'), {
 					name: this.form.name,
 				});
-				this.getPersons(); // Aktualisieren Sie die Personenliste nach erfolgreichem Speichern
+				this.getPersons(); 
 			}
 		},
 		async getPersons() {
@@ -63,13 +61,13 @@ export default {
 					generateUrl(`/apps/itamapp/person/${id}`)
 				);
 				if (response.status === 200) {
-					this.getPersons(); // Aktualisieren Sie die Personenliste nach erfolgreichem Löschen
+					this.getPersons(); 
 				}
 			}
 		},
 	},
 	mounted() {
-		this.getPersons(); // Personenliste beim Laden der Komponente abrufen
+		this.getPersons();
 	},
 };
 </script>

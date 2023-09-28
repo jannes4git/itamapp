@@ -4,8 +4,12 @@
 		<div class="container">
 			<form @submit.prevent="submitForm">
 				<div class="field">
+					<label class="label"> Inventarnummer: </label>
+					<input class="input" type="text" v-model="inventarnummer" />
+				</div>
+				<div class="field">
 					<label class="label"> Rechnungsdatum: </label>
-					<input class="input" type="date" v-model="rechnungsdatum" required />
+					<input class="input" type="date" v-model="rechnungsdatum" />
 				</div>
 				<div class="field">
 					<label class="label"> Seriennummer: </label>
@@ -36,7 +40,7 @@
 					<label class="label"> {{ field.name }}: </label>
 					<input class="input" type="text" v-model="customFieldValues[field.name]" />
 				</div>
-				<button type="submit" :disabled="rechnungsdatum===''">Erstellen</button>
+				<button type="submit" :disabled="rechnungsdatum==='' && inventarnummer===''">Erstellen</button>
 
 			</form>
 		</div>
@@ -51,6 +55,7 @@ import { postAsset } from '../AssetService';
 export default {
 	data() {
 		return {
+			inventarnummer: '',
 			rechnungsdatum: '',
 			seriennummer: '',
 			raum: '',
@@ -77,12 +82,13 @@ export default {
 			return this[fieldName.toLowerCase()];
 		},
 		async submitForm(){
-			if(this.rechnungsdatum == '' || this.rechnungsdatum == null){
-				alert('Bitte Rechnungsdatum angeben');
+			if((this.inventarnummer=='')&&(this.rechnungsdatum == '' || this.rechnungsdatum == null)){
+				alert('Bitte Inventarnummer oder Rechnungsdatum angeben');
 				return;
 			}
 			console.log('Create Asset' + this.raum.id + ' ' + this.person.id);
 			const asset = {
+				inventarnummer: this.inventarnummer,
 				rechnungsdatum: this.rechnungsdatum,
 				seriennummer: this.seriennummer,
 				locationId: this.raum.id,
@@ -97,6 +103,7 @@ export default {
 				this.$router.push('/');
 			} catch (error) {
 				console.log('Error: ', error);
+				alert('Asset konnte nicht erstellt werden: ' + error.response.data);
 			}
 		},
 		async createAsset() {

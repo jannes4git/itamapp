@@ -80,16 +80,14 @@ export default {
 	},
 	methods: {
 		async generateQRCode() {
-			//TODO: übearbeiten
 			this.qrValue = window.location.href;
 
-			// Warten Sie, bis Vue den QR-Code gerendert hat
 			await this.$nextTick();
 
 			const qrElement = this.$refs.qrCode.$el.querySelector('canvas');
 			if (qrElement) {
 				const link = document.createElement('a');
-				link.download = 'qrcode.png';
+				link.download = this.inventarnummer+'Qrcode.png';
 				link.href = qrElement.toDataURL('image/png');
 				link.click();
 			}
@@ -148,8 +146,7 @@ export default {
 		},
 		assetLoaded() {
 			return (
-				this.raeume !== null && this.customFields !== null //&&
-				//this.loading === false
+				this.raeume !== null && this.customFields !== null && this.personen !== null && this.inventar !== null
 			);
 		},
 	},
@@ -159,8 +156,6 @@ export default {
 		this.seriennummer = this.inventar.seriennummer;
 		this.raum = this.inventar.locationId;
 		this.person = this.inventar.personId;
-		console.log('Raum: ', this.raum);
-		console.log('CustomFieldValues: ', this.customFieldValuesFetch);
 		this.customFields.forEach((field) => {
 			let value = this.customFieldValuesFetch.find((value) => value.name === field.name);
 			this.customFieldValues[field.id] = value ? value.value : '';

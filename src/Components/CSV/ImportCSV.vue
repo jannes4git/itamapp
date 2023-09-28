@@ -118,9 +118,14 @@ export default {
 				alert('Import von ' + JSON.stringify(response)+ ' Assets erfolgreich');
 				this.$router.push('/');
 			} catch (error) {
-				alert('Import fehlgeschlagen: ' + error.response.data.message + '\nBitte überprüfen Sie die CSV Datei in den Zeilen:\n'+error.response.data.zeilen);
+				if(error.response.data.existingInventarnummern){
+					alert('Import fehlgeschlagen: ' + error.response.data.message + '\nDuplikate:\n'+error.response.data.existingInventarnummern);
+				} else if (error.response.data.zeilen){
+					alert('Import fehlgeschlagen: ' + error.response.data.message + '\nBitte überprüfen Sie die CSV Datei in den Zeilen:\n'+error.response.data.zeilen);
+				} else {
+					alert('Import fehlgeschlagen: ' + error.response.data.message);
+				}
 			}
-			//await this.postCSV(allAssets);
 			console.log('Import fertig');
 		},
 		/**

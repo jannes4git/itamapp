@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-// SPDX-FileCopyrightText: Jannes Lensch <test@test.de>
-// SPDX-License-Identifier: AGPL-3.0-or-later
 
 namespace OCA\ItamApp\Db;
 
@@ -21,7 +19,6 @@ class PersonMapper extends QBMapper
 {
 	public function __construct(IDBConnection $db)
 	{
-		//der 2. string ist der db name
 		parent::__construct($db, 'person', Person::class);
 	}
 

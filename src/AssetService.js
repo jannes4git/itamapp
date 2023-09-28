@@ -76,7 +76,7 @@ export async function postAsset(asset) {
 
 		return response.data;
 	} catch (error) {
-		console.error(error);
+		throw error;
 	}
 }
 export async function postAssets(assets) {

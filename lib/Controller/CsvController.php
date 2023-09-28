@@ -65,14 +65,14 @@ class CsvController extends Controller
 
         // Check ob Inventarnummern bereits vergeben sind
         $inventarnummernExisting = array();
-        foreach ($data as $index => &$item) {
-            if ($item['inventarnummer'] !== null && $item['inventarnummer'] !== "") {
-                $exists = $this->assetService->inventarnummerExistsCheck($item['inventarnummer']);
+        foreach ($data as $index => &$asset) {
+            if ($asset['inventarnummer'] !== null && $asset['inventarnummer'] !== "") {
+                $exists = $this->assetService->inventarnummerExistsCheck($asset['inventarnummer']);
                 if ($exists) {
-                    array_push($inventarnummernExisting, $item['inventarnummer']);
+                    array_push($inventarnummernExisting, $asset['inventarnummer']);
                 }
             }
-            unset($item);
+            unset($asset);
         }
         if (count($inventarnummernExisting) > 0) {
             $response = [
@@ -81,9 +81,12 @@ class CsvController extends Controller
             ];
             return new DataResponse($response, Http::STATUS_CONFLICT);
         }
+
+        //Check ob Inventarnummern und Rechnungsdaten fehlen 
+        //  -> Inventarnummer kann weder importiert noch generiert werden
         $inventarnummerAndRechnungsdatumMissing = array();
-        foreach ($data as $index => &$item) {
-            if (($item['inventarnummer'] == null || $item['inventarnummer'] == "") && ($item['rechnungsdatum'] == null || $item['rechnungsdatum'] == "")) {
+        foreach ($data as $index => &$asset) {
+            if (($asset['inventarnummer'] == null || $asset['inventarnummer'] == "") && ($asset['rechnungsdatum'] == null || $asset['rechnungsdatum'] == "")) {
                 array_push($inventarnummerAndRechnungsdatumMissing, $index + 2);
             }
         }
@@ -99,34 +102,22 @@ class CsvController extends Controller
         $count = 0;
         $fehlerBeiAsset = array();
 
-        foreach ($data as $index => &$item) {
-            //TODO: vielleicht erstmal Defaultrechnungsdatum setzen?
-            //if ($item['inventarnummer'] == null && $item['rechnungsdatum'] == null) {
-            //    $response = [
-            //        "message" => "Rechnungsdatum fehlt bei Asset -> Inventarnummer kann nicht erstellt werden"
-            //    ];
-            //    return new DataResponse($response, Http::STATUS_CONFLICT);
-            //}
-            if ($item['inventarnummer'] == null && $item['inventarnummer'] == "") {
+        foreach ($data as $index => &$asset) {
+            if ($asset['inventarnummer'] == null && $asset['inventarnummer'] == "") {
                 try {
-                    $item['inventarnummer'] = $this->assetService->generateInventarnummer($item['rechnungsdatum']);
+                    $asset['inventarnummer'] = $this->assetService->generateInventarnummer($asset['rechnungsdatum']);
                 } catch (Exception $e) {
                     array_push($fehlerBeiAsset, $count);
                     continue;
                 }
             }
             try {
-                $id = $this->assetService->create($item['inventarnummer'], $item['rechnungsdatum'], $item['seriennummer'], $item['locationId'], $item['personId'], $item['customFieldValues']);
+                $id = $this->assetService->create($asset['inventarnummer'], $asset['rechnungsdatum'], $asset['seriennummer'], $asset['locationId'], $asset['personId'], $asset['customFieldValues']);
             } catch (Exception $e) {
-                //array_push($fehlerBeiAsset, $count);
-                //$response = [
-                //    "message" => "Fehler beim Erstellen des Assets mit der Inventarnummer: " . $item['inventarnummer'],
-                //    "error" => $e->getMessage(),
-                //];
-                //return new DataResponse($response, Http::STATUS_INTERNAL_SERVER_ERROR);
+                //TODO: rollback
             }
             $count++;
-            unset($item);
+            unset($asset);
         }
         if (count($fehlerBeiAsset) > 0) {
             $response = [
