@@ -19123,16 +19123,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_material_design_icons_Plus_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-material-design-icons/Plus.vue */ "./node_modules/vue-material-design-icons/Plus.vue");
 /* harmony import */ var vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/Pencil.vue */ "./node_modules/vue-material-design-icons/Pencil.vue");
 /* harmony import */ var _nextcloud_dialogs_styles_toast_scss__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @nextcloud/dialogs/styles/toast.scss */ "./node_modules/@nextcloud/dialogs/styles/toast.scss");
-/* harmony import */ var _nextcloud_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @nextcloud/router */ "./node_modules/@nextcloud/router/dist/index.js");
-/* harmony import */ var _nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @nextcloud/dialogs */ "./node_modules/@nextcloud/dialogs/dist/index.es.js");
-/* harmony import */ var _nextcloud_axios__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @nextcloud/axios */ "./node_modules/@nextcloud/axios/dist/index.js");
-/* harmony import */ var _Components_AssetTable_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Components/AssetTable.vue */ "./src/Components/AssetTable.vue");
-/* harmony import */ var _AssetService_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./AssetService.js */ "./src/AssetService.js");
-/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./store/store */ "./src/store/store.js");
-
-
-
-
+/* harmony import */ var _Components_AssetTable_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Components/AssetTable.vue */ "./src/Components/AssetTable.vue");
+/* harmony import */ var _AssetService_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./AssetService.js */ "./src/AssetService.js");
 
 
 
@@ -19153,129 +19145,13 @@ __webpack_require__.r(__webpack_exports__);
     NcAppNavigation: (_nextcloud_vue_dist_Components_NcAppNavigation__WEBPACK_IMPORTED_MODULE_3___default()),
     NcAppNavigationItem: (_nextcloud_vue_dist_Components_NcAppNavigationItem__WEBPACK_IMPORTED_MODULE_4___default()),
     NcAppNavigationNew: (_nextcloud_vue_dist_Components_NcAppNavigationNew__WEBPACK_IMPORTED_MODULE_5___default()),
-    AssetTable: _Components_AssetTable_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    AssetTable: _Components_AssetTable_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
     PlusIcon: vue_material_design_icons_Plus_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     Pencil: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
     Pencil: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   async beforeMount() {
-    //console.log(store.getters.getAssets);
-    console.log('created App.vue');
-    await (0,_AssetService_js__WEBPACK_IMPORTED_MODULE_13__.fetchAssets)();
-  },
-  data() {
-    return {
-      currentNoteId: null,
-      updating: false
-    };
-  },
-  computed: {
-    assets() {
-      //console.log("Assets: "+store.getters.assets);
-      return _store_store__WEBPACK_IMPORTED_MODULE_14__["default"].getters.assets;
-    }
-  },
-  methods: {
-    newAsset() {
-      alert('new Asset');
-    },
-    /**
-     * Create a new note and focus the note content field automatically
-     * @param {Object} note Note object
-     */
-    openNote(note) {
-      if (this.updating) {
-        return;
-      }
-      this.currentNoteId = note.id;
-      this.$nextTick(() => {
-        this.$refs.content.focus();
-      });
-    },
-    /**
-     * Action tiggered when clicking the save button
-     * create a new note or save
-     */
-    saveNote() {
-      if (this.currentNoteId === -1) {
-        this.createNote(this.currentNote);
-      } else {
-        this.updateNote(this.currentNote);
-      }
-    },
-    /**
-     * Create a new note and focus the note content field automatically
-     * The note is not yet saved, therefore an id of -1 is used until it
-     * has been persisted in the backend
-     */
-    newNote() {
-      if (this.currentNoteId !== -1) {
-        this.currentNoteId = -1;
-        this.notes.push({
-          id: -1,
-          title: '',
-          content: ''
-        });
-        this.$nextTick(() => {
-          this.$refs.title.focus();
-        });
-      }
-    },
-    /**
-     * Abort creating a new note
-     */
-    cancelNewNote() {
-      this.notes.splice(this.notes.findIndex(note => note.id === -1), 1);
-      this.currentNoteId = null;
-    },
-    /**
-     * Create a new note by sending the information to the server
-     * @param {Object} note Note object
-     */
-    async createNote(note) {
-      this.updating = true;
-      try {
-        const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_11__["default"].post((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_9__.generateUrl)('/apps/itamapp/notes'), note);
-        const index = this.notes.findIndex(match => match.id === this.currentNoteId);
-        this.$set(this.notes, index, response.data);
-        this.currentNoteId = response.data.id;
-      } catch (e) {
-        console.error(e);
-        (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_10__.showError)(t('notestutorial', 'Could not create the note'));
-      }
-      this.updating = false;
-    },
-    /**
-     * Update an existing note on the server
-     * @param {Object} note Note object
-     */
-    async updateNote(note) {
-      this.updating = true;
-      try {
-        await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_11__["default"].put((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_9__.generateUrl)("/apps/itamapp/notes/".concat(note.id)), note);
-      } catch (e) {
-        console.error(e);
-        (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_10__.showError)(t('notestutorial', 'Could not update the note'));
-      }
-      this.updating = false;
-    },
-    /**
-     * Delete a note, remove it from the frontend and show a hint
-     * @param {Object} note Note object
-     */
-    async deleteNote(note) {
-      try {
-        await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_11__["default"].delete((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_9__.generateUrl)("/apps/itamapp/notes/".concat(note.id)));
-        this.notes.splice(this.notes.indexOf(note), 1);
-        if (this.currentNoteId === note.id) {
-          this.currentNoteId = null;
-        }
-        (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_10__.showSuccess)(t('itamapp', 'Note deleted'));
-      } catch (e) {
-        console.error(e);
-        (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_10__.showError)(t('itamapp', 'Could not delete the note'));
-      }
-    }
+    await (0,_AssetService_js__WEBPACK_IMPORTED_MODULE_10__.fetchAssets)();
   }
 });
 
@@ -19852,11 +19728,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @nextcloud/axios */ "./node_modules/@nextcloud/axios/dist/index.js");
-/* harmony import */ var _nextcloud_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nextcloud/router */ "./node_modules/@nextcloud/router/dist/index.js");
-/* harmony import */ var _AssetService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AssetService */ "./src/AssetService.js");
-
-
+/* harmony import */ var _AssetService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AssetService */ "./src/AssetService.js");
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data() {
@@ -19869,9 +19741,7 @@ __webpack_require__.r(__webpack_exports__);
       customFieldValues: {}
     };
   },
-  mounted() {
-    console.log('MOunt ' + this.raeume);
-  },
+  mounted() {},
   computed: {
     customFields() {
       return this.$store.getters.getCustomFields;
@@ -19892,7 +19762,6 @@ __webpack_require__.r(__webpack_exports__);
         alert('Bitte Inventarnummer oder Rechnungsdatum angeben');
         return;
       }
-      console.log('Create Asset' + this.raum.id + ' ' + this.person.id);
       const asset = {
         inventarnummer: this.inventarnummer,
         rechnungsdatum: this.rechnungsdatum,
@@ -19903,7 +19772,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       console.log('Asset: ', asset);
       try {
-        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_2__.postAsset)(asset);
+        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.postAsset)(asset);
         console.log('Response: ', response.status);
         alert('Asset erfolgreich erstellt' + JSON.stringify(response));
         this.$router.push('/');
@@ -19927,7 +19796,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       console.log('Asset: ', asset);
       try {
-        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_2__.postAsset)(asset);
+        let response = await (0,_AssetService__WEBPACK_IMPORTED_MODULE_0__.postAsset)(asset);
         console.log('Response: ', response.status);
         alert('Asset erfolgreich erstellt' + JSON.stringify(response));
         this.$router.push('/');
@@ -21621,7 +21490,7 @@ const routes = [{
   component: _Components_PersonRaum_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
 }];
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vue_router__WEBPACK_IMPORTED_MODULE_10__["default"]({
-  //mode: "history", //warum gehts mit history nicht url einfügen in browser?
+  //mode: "history", 
   base: (0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_8__.generateUrl)('apps/itamapp'),
   linkActiveClass: 'active',
   routes
@@ -55901,18 +55770,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue */ "./src/App.vue");
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router */ "./src/router.js");
 /* harmony import */ var _store_store_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/store.js */ "./src/store/store.js");
-/**
- * SPDX-FileCopyrightText: 2018 John Molakvoæ <skjnldsv@protonmail.com>
- * SPDX-License-Identifier: AGPL-3.0-or-later
- */
 
 
 
 
 
-
-
-// eslint-disable-next-line
 __webpack_require__.p = (0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_0__.generateFilePath)("itamapp", '', 'js/');
 vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
   methods: {
@@ -55930,4 +55792,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=68ad81409cf72261761a
+//# sourceMappingURL=itamapp-main.js.map?v=b07caa50a4da57149e61

@@ -48,8 +48,7 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios';
-import { generateUrl } from '@nextcloud/router';
+
 import { postAsset } from '../AssetService';
 
 export default {
@@ -64,7 +63,6 @@ export default {
 		};
 	},
 	mounted() {
-		console.log('MOunt ' + this.raeume);
 	},
 	computed: {
 		customFields() {
@@ -86,7 +84,6 @@ export default {
 				alert('Bitte Inventarnummer oder Rechnungsdatum angeben');
 				return;
 			}
-			console.log('Create Asset' + this.raum.id + ' ' + this.person.id);
 			const asset = {
 				inventarnummer: this.inventarnummer,
 				rechnungsdatum: this.rechnungsdatum,

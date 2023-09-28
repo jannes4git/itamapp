@@ -28,9 +28,7 @@ class CsvController extends Controller
     public function index(): DataResponse
     {
         $csvData = $this->request->getParams();
-        //$columns = $this->mapper->getColumns();
         $data = null;
-        //return new DataResponse(array($columns, $data));
         return new DataResponse($csvData);
     }
 
