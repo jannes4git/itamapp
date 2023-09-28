@@ -19699,9 +19699,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     async getColumns() {
       var columnsDB = (await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_2__.generateUrl)('/apps/itamapp/meta'))).data;
-      //console.log(this.dbColumns[0][0].COLUMN_NAME);
-      //TODO: Defaultfelder vielleicht hardcoden und nicht fetchen? -> ja machen!
-      //this.defaultFelder = columnsDB[0];
       this.customFelder = columnsDB[1];
       this.defaultFelder.forEach(element => {
         console.log('Pushe: ', element);
@@ -21315,43 +21312,26 @@ const fetchAssets = async () => {
   console.log('fetchAssets');
   try {
     const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/assets'));
-    //console.log('Hallo Jannes: ' + response.data[0].seriennummer);
-    //this.inventar = response.data;
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setInventar', response.data);
-    //console.log('Inventar ' + store.getters.getInventar);
   } catch (e) {
     console.error(e);
-    (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_2__.showError)(t('notestutorial', 'Could not fetch assets'));
   }
   try {
     const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/customfields'));
-    //TODO: andere Möglichkeit vlt bessere Laufzeit. API call auf assets und customfields zusammen dann group by asset und halt pro zeile ein asset mit einem customfield
-    //VLT DB Prof eine Email schicken und fragen wie er es lösen würde
-    //this.customFields = response.data[1];
-    //console.log("CustomFieldValues: " + JSON.stringify(response.data[1]));
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setCustomFieldValues', response.data[1]);
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setCustomFields', response.data[0]);
-    //response.data[0].forEach((element) => {
-    //console.log("CustomField: " + element.id);
-    //});
-    //this.fields = response.data[0];
-    //console.log("Fields: " +this.fields);
   } catch (e) {
     console.error(e);
-    (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_2__.showError)(t('notestutorial', 'Could not fetch customfields'));
   }
   try {
     const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/raum'));
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setRaum', response.data);
-    //console.log("Raum: " + store.getters.getRaum[1].id);
   } catch (e) {
     console.error(e);
-    (0,_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_2__.showError)(t('notestutorial', 'Could not fetch raum'));
   }
   try {
     const response = await _nextcloud_axios__WEBPACK_IMPORTED_MODULE_0__["default"].get((0,_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__.generateUrl)('/apps/itamapp/person'));
     _store_store_js__WEBPACK_IMPORTED_MODULE_3__["default"].commit('setPersonen', response.data);
-    //console.log('Personen: ' + store.getters.getPersonen);
   } catch (e) {
     console.error(e);
   }
@@ -55792,4 +55772,4 @@ vue__WEBPACK_IMPORTED_MODULE_4__["default"].mixin({
 
 /******/ })()
 ;
-//# sourceMappingURL=itamapp-main.js.map?v=b07caa50a4da57149e61
+//# sourceMappingURL=itamapp-main.js.map?v=8b49d203e5a0ed8c3425

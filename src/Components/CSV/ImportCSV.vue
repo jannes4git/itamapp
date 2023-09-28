@@ -251,9 +251,6 @@ export default {
 		},
 		async getColumns() {
 			var columnsDB = (await axios.get(generateUrl('/apps/itamapp/meta'))).data;
-			//console.log(this.dbColumns[0][0].COLUMN_NAME);
-			//TODO: Defaultfelder vielleicht hardcoden und nicht fetchen? -> ja machen!
-			//this.defaultFelder = columnsDB[0];
 			this.customFelder = columnsDB[1];
 
 			this.defaultFelder.forEach((element) => {
