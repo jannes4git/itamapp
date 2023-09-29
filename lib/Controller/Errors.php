@@ -1,8 +1,6 @@
 <?php
 
 declare(strict_types=1);
-// SPDX-FileCopyrightText: Jannes Lensch <jannes.lensch@web.de>
-// SPDX-License-Identifier: AGPL-3.0-or-later
 
 namespace OCA\ItamApp\Controller;
 
@@ -11,7 +9,7 @@ use Closure;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 
-use OCA\ItamApp\Service\NoteNotFound;
+use OCA\ItamApp\Service\AssetNotFound;
 
 trait Errors
 {
@@ -19,7 +17,7 @@ trait Errors
 	{
 		try {
 			return new DataResponse($callback());
-		} catch (NoteNotFound $e) {
+		} catch (AssetNotFound $e) {
 			$message = ['message' => $e->getMessage()];
 			return new DataResponse($message, Http::STATUS_NOT_FOUND);
 		}

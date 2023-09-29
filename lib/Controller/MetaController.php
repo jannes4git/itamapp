@@ -4,7 +4,6 @@ namespace OCA\ItamApp\Controller;
 
 use Exception;
 use OCP\AppFramework\Http;
-use OCA\ItamApp\Db\ColumnMapper;
 use OCA\ItamApp\Db\CustomFieldMapper;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
