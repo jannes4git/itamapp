@@ -7,7 +7,6 @@ import store from "./store/store.js";
  * Service für Assets: CRUD-Operationen
  */
 export const fetchAssets = async () => {
-    console.log("fetchAssets");
     try {
         const response = await axios.get(generateUrl("/apps/itamapp/assets"));
         store.commit("setInventar", response.data);

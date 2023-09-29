@@ -112,7 +112,6 @@ export default {
             };
             try {
                 let response = await postAsset(asset);
-                console.log("Response: ", response.status);
                 alert("Asset erfolgreich erstellt" + JSON.stringify(response));
                 this.$router.push("/");
             } catch (error) {

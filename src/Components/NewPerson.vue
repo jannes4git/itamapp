@@ -57,11 +57,9 @@ export default {
             }
         },
         async getPersons() {
-            console.log("getPersons");
             const response = await axios.get(
                 generateUrl("/apps/itamapp/person")
             );
-            console.log(response);
             this.persons = response.data;
         },
         async deletePerson(id) {

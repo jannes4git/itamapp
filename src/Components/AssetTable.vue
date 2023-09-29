@@ -151,7 +151,6 @@ export default {
 
             const picker = builder.build();
             this.selectedPdfPath = await picker.pick();
-            console.log("Selected PDF: " + this.selectedPdfPath);
         },
         editSelected() {
             console.log("Selected items:", this.selected);

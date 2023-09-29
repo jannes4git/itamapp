@@ -185,7 +185,6 @@ export default {
         },
         async postCSV(csvData) {
             let response = await postAssets(csvData);
-            console.log(response);
         },
         /**
          * Check ob ein CSV Feld bereits zugeordnet wurde.
@@ -279,7 +278,6 @@ export default {
             this.customFelder = columnsDB;
 
             this.defaultFelder.forEach((element) => {
-                console.log("Pushe: ", element);
                 this.dbFields.push(element);
             });
             this.customFelder.forEach((element) => {
