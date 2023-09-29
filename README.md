@@ -8,8 +8,8 @@ cd itamapp/
 
 npm install 
 
-npm run dev
+npm run build
 
-&rarr; Now the app can be activated in +App-Settings
+&rarr; Now the app can be activated in the +app settings
 
 # itamapp
