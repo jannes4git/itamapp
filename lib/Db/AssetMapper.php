@@ -24,7 +24,6 @@ class AssetMapper extends QBMapper
 	 */
 	public function find(int $id): Asset
 	{
-		/* @var $qb IQueryBuilder */
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('a.id', 'a.inventarnummer', 'a.rechnungsdatum', 'a.seriennummer', 'a.locationId')
 			->from('asset', 'a')
@@ -36,7 +35,6 @@ class AssetMapper extends QBMapper
 
 	public function findAll(): array
 	{
-		/* @var $qb IQueryBuilder */
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('a.id', 'a.inventarnummer', 'a.rechnungsdatum', 'a.seriennummer', 'a.locationId', 'a.personId')
 			->from('asset', 'a');
@@ -60,6 +58,9 @@ class AssetMapper extends QBMapper
 		$qb->execute();
 	}
 
+	/**
+	 * Suche Asset mit Inventarnummer.
+	 */
 	public function search(string $query)
 	{
 		$qb = $this->db->getQueryBuilder();
@@ -67,22 +68,5 @@ class AssetMapper extends QBMapper
 			->from('asset', 'a')
 			->where($qb->expr()->like('a.inventarnummer', $qb->createNamedParameter('%' . $query . '%')));
 		return $this->findEntities($qb);
-	}
-
-
-	public function getColumns()
-	{
-		/* @var $qb IQueryBuilder */
-		$qb = $this->db->getQueryBuilder();
-		$result = $this->db->executeQuery("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = 'oc_inventar' ORDER BY ordinal_position");
-		try {
-			$entities = [];
-			while ($row = $result->fetch()) {
-				$entities[] = $row;
-			}
-		} finally {
-			$result->closeCursor();
-		}
-		return $entities;
 	}
 }

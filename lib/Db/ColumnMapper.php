@@ -10,7 +10,6 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-//TODO: delete?
 /**
  * @template-extends QBMapper<Asset>
  */
@@ -18,10 +17,12 @@ class ColumnMapper extends QBMapper
 {
 	public function __construct(IDBConnection $db)
 	{
-		parent::__construct($db, 'inventar');
+		parent::__construct($db, 'asset');
 	}
 
-
+	/**
+	 * Funktion zum herausfinden der Spaltennamen der Tabelle oc_asset.
+	 */
 	public function getColumns()
 	{
 		/* @var $qb IQueryBuilder */
@@ -35,7 +36,6 @@ class ColumnMapper extends QBMapper
 			}
 		} finally {
 			$result->closeCursor();
-			//return $result;
 		}
 		return $entities;
 	}

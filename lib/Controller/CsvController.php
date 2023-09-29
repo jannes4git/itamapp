@@ -22,21 +22,16 @@ class CsvController extends Controller
         $this->assetService = $assetService;
     }
 
+
     /**
      * @NoAdminRequired
      */
     public function index(): DataResponse
     {
         $csvData = $this->request->getParams();
-        $data = null;
         return new DataResponse($csvData);
     }
 
-    /**
-     * @NoAdminRequired
-     *
-     * @param int $id
-     */
     public function show(int $id): DataResponse
     {
         try {
@@ -48,6 +43,7 @@ class CsvController extends Controller
 
     /**
      * @NoAdminRequired
+     * NOTE: Eine Transaktionsfunktion die bei Fehlern einen rollback macht wäre sinnvoll
      */
     public function create()
     {
@@ -56,8 +52,6 @@ class CsvController extends Controller
 
         // Konvertiere den POST-Body in ein PHP-Array
         $data = json_decode($postData, true);
-
-        //TODO: per Transaction rollbackable machen?
 
         // Check ob Inventarnummern bereits vergeben sind
         $inventarnummernExisting = array();
@@ -128,10 +122,6 @@ class CsvController extends Controller
 
     /**
      * @NoAdminRequired
-     *
-     * @param int $id
-     * @param string $date
-     * @param string $beschreibung
      */
     public function update(int $id, string $date, string $beschreibung)
     {
@@ -140,8 +130,6 @@ class CsvController extends Controller
 
     /**
      * @NoAdminRequired
-     *
-     * @param int $id
      */
     public function destroy(int $id)
     {

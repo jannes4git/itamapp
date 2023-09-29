@@ -85,7 +85,7 @@ class AssetService
 					$cfv = $this->customFieldValueMapper->find($key, $id);
 					$this->customFieldValueMapper->delete($cfv);
 				} catch (Exception $e) {
-					//cfv does not exist
+					//cfv exisitiert nicht
 				}
 				continue;
 			}
@@ -94,12 +94,11 @@ class AssetService
 				$cfv->setValue($value);
 				$this->customFieldValueMapper->update($cfv);
 			} catch (Exception $e) {
-				//cfv does not exist
+				//cfv existiert nicht
 			}
 			if ($cfv === null) {
 				$cfv = new CustomFieldValue();
 				$cfv->setAssetId($asset->getId());
-				//$id = $this->getIdForCF($key);
 				$cfv->setCustomFieldId($key);
 				$cfv->setValue($value);
 				$this->customFieldValueMapper->insert($cfv);

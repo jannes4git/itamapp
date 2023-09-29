@@ -49,10 +49,12 @@ class AssetController extends Controller
 
     /**
      * @NoAdminRequired
-     *
      * @param string $inventarnummer
      * @param string $rechnungsdatum
-     * @param string|null $beschreibung
+     * @param string|null $seriennummer
+     * @param int|null $locationId
+     * @param int|null $personId
+     * @param array|null $customFieldValues
      */
     public function create(string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId, ?int $personId, array $customFieldValues = null)
     {
@@ -77,10 +79,13 @@ class AssetController extends Controller
 
     /**
      * @NoAdminRequired
-     *
      * @param int $id
-     * @param string $date
-     * @param string $beschreibung
+     * @param string $inventarnummer
+     * @param string $rechnungsdatum
+     * @param string|null $seriennummer
+     * @param int|null $locationId
+     * @param int|null $personId
+     * @param array|null $customFieldValues
      */
     public function update(int $id, string $inventarnummer, string $rechnungsdatum, string $seriennummer = null, ?int $locationId = null, ?int $personId = null, array $customFieldValues = null)
     {
@@ -90,7 +95,6 @@ class AssetController extends Controller
 
     /**
      * @NoAdminRequired
-     *
      * @param int $id
      */
     public function destroy(int $id)

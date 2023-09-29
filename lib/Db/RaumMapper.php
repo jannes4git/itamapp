@@ -17,7 +17,6 @@ class RaumMapper extends QBMapper
 {
 	public function __construct(IDBConnection $db)
 	{
-		//der 2. string ist der db name
 		parent::__construct($db, 'raum', Raum::class);
 	}
 
@@ -35,7 +34,6 @@ class RaumMapper extends QBMapper
 	}
 
 	/**
-	 * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
 	 * @throws DoesNotExistException
 	 */
 	public function findAll(): array

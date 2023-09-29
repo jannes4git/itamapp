@@ -70,6 +70,12 @@ class CustomFieldMapper extends QBMapper
         return $customFieldValues;
     }
 
+    /**
+     * Gibt die ID des CustomFields mit dem Namen $name zurück.
+     * Falls kein CustomField mit dem Namen existiert, wird -1 zurückgegeben.
+     * 
+     * @param string $name
+     */
     public function getId(string $name): int
     {
         $query = "SELECT id FROM oc_custom_fields WHERE name = :name";
@@ -85,7 +91,7 @@ class CustomFieldMapper extends QBMapper
             }
         }
 
-        // Kein Ergebnis gefunden wurde
+        // Kein Ergebnis wurde gefunden
         return -1;
     }
 }

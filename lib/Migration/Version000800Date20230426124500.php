@@ -90,7 +90,7 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 				'length' => 255
 			]);
 			$assetTable->addColumn('seriennummer', 'string', [
-				'notnull' => true,
+				'notnull' => false,
 			]);
 			$assetTable->addColumn('rechnungsdatum', 'date', [
 				'notnull' => false,
@@ -112,39 +112,6 @@ class Version000800Date20230426124500 extends SimpleMigrationStep
 				'onDelete' => 'SET NULL',
 			]);
 		}
-		$table = $schema->getTable('asset');
-		$column = $table->getColumn('seriennummer');
-		$column->setNotnull(false);
-		$type = \Doctrine\DBAL\Types\Type::getType('string');
-		$column->setType($type);
-
-
-
-		//Raum-Person Table
-		/**
-		 if (!$schema->hasTable('person_raum')) {
-			$table = $schema->createTable('person_raum');
-			$table->addColumn('id', 'integer', [
-				'autoincrement' => true,
-				'notnull' => true,
-			]);
-			$table->addColumn('personId', 'bigint', [
-				'notnull' => true,
-				'unsigned' => true,
-
-			]);
-			$table->addColumn('raumId', 'bigint', [
-				'notnull' => true,
-				'unsigned' => true,
-
-			]);
-
-			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['personId', 'raumId'], 'person_raum_person_raum_index');
-			$table->addForeignKeyConstraint($schema->getTable('person'), ['personId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_person_id_fk');
-			$table->addForeignKeyConstraint($schema->getTable('raum'), ['raumId'], ['id'], ['onDelete' => 'CASCADE'], 'person_raum_raum_id_fk');
-		}
-		 */
 
 
 		//Custom Field Values

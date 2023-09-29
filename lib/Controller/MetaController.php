@@ -28,7 +28,6 @@ class MetaController extends Controller
      */
     public function index(): DataResponse
     {
-        //Nur die übermitteln die auch gemappt werden sollen?
         $columns = $this->mapper->getColumns();
         $customColumns = $this->cfMapper->findAllCustomFields();
         return new DataResponse(array($columns, $customColumns));
@@ -53,23 +52,16 @@ class MetaController extends Controller
      */
     public function create()
     {
-        //$_REQUEST
-        //$_FILES['data']['type'];
         $csvData = $this->request->getParams();
-        //$columns = $this->mapper->getColumns();
-        $data = null;
-        //return new DataResponse(array($columns, $data));
-        return new DataResponse($_FILES);
+        return new DataResponse(null);
     }
 
     /**
      * @NoAdminRequired
      *
      * @param int $id
-     * @param string $date
-     * @param string $beschreibung
      */
-    public function update(int $id, string $date, string $beschreibung)
+    public function update(int $id)
     {
         // empty for now
     }

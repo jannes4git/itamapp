@@ -46,9 +46,8 @@ class PersonController extends Controller
     /**
      * @NoAdminRequired
      *
-     * @param string $inventarnummer
-     * @param string $rechnungsdatum
-     * @param string|null $beschreibung
+     * @param string $name
+     * @param int|null $locationId
      */
     public function create(string $name, ?int $locationId = null)
     {
@@ -60,8 +59,8 @@ class PersonController extends Controller
      * @NoAdminRequired
      *
      * @param int $id
-     * @param string $name
-     * @param string $locationId
+     * @param string|null $name
+     * @param int|null $locationId
      */
     public function update(int $id, ?string $name = null, ?int $locationId = null)
     {

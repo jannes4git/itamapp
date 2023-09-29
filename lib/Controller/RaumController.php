@@ -30,6 +30,12 @@ class RaumController extends Controller
         $raeume = $this->mapper->findAll();
         return new DataResponse($raeume);
     }
+
+    /**
+     * @NoAdminRequired
+     *
+     * @param int $id
+     */
     public function show(int $id): DataResponse
     {
         try {
@@ -39,6 +45,12 @@ class RaumController extends Controller
             return new DataResponse([], Http::STATUS_NOT_FOUND);
         }
     }
+
+    /**
+     * @NoAdminRequired
+     *
+     * @param string $name
+     */
     public function create(string $name): DataResponse
     {
         $raum = new Raum();
@@ -46,6 +58,13 @@ class RaumController extends Controller
         $raum = $this->mapper->insert($raum);
         return new DataResponse($raum);
     }
+
+    /**
+     * @NoAdminRequired
+     *
+     * @param int $id
+     * @param string $name
+     */
     public function destroy(int $id): DataResponse
     {
         try {

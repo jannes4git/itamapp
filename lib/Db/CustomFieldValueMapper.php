@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace OCA\ItamApp\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\QBMapper;
-use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-use function Safe\mysql_query;
 
 /**
  * @template-extends QBMapper<CustomFieldValue>
@@ -19,7 +16,6 @@ class CustomFieldValueMapper extends QBMapper
 {
 	public function __construct(IDBConnection $db)
 	{
-		//der 2. string ist der db name
 		parent::__construct($db, 'custom_field_values', CustomFieldValue::class);
 	}
 

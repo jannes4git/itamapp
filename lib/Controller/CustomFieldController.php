@@ -23,14 +23,13 @@ class CustomFieldController extends Controller
 
     /**
      * @NoAdminRequired
+     * Gibt sowohl alle CustomFields als auch alle CustomFieldValues zurück.
      */
     public function index(): DataResponse
     {
-        //$columns = $this->mapper->getColumns();
         $cf = $this->mapper->findAllCustomFieldValues();
         $fields = $this->mapper->findAllCustomFields();
         return new DataResponse(array($fields, $cf));
-        //return new DataResponse(array($cf, $cfv));
     }
 
     /**
@@ -50,9 +49,8 @@ class CustomFieldController extends Controller
     /**
      * @NoAdminRequired
      *
-     * @param string $inventarnummer
-     * @param string $rechnungsdatum
-     * @param string|null $beschreibung
+     * @param string $name
+     * @param string $type
      */
     public function create(string $name, string $type)
     {
@@ -67,10 +65,8 @@ class CustomFieldController extends Controller
      * @NoAdminRequired
      *
      * @param int $id
-     * @param string $date
-     * @param string $beschreibung
      */
-    public function update(int $id, string $date, string $beschreibung)
+    public function update(int $id)
     {
         // empty for now
     }
