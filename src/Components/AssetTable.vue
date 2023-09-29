@@ -67,9 +67,6 @@ import { fetchAssets } from "../AssetService";
 
 export default {
     name: "InventoryTable",
-    props: {
-        inventoryList: [],
-    },
     data() {
         return {
             search: "",
