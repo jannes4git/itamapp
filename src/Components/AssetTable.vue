@@ -230,8 +230,6 @@ export default {
                 cfAsset.forEach((cf) => {
                     asset[cf.name] = cf.value;
                 });
-
-                //asset.customFields = groupedCustomFields[asset.id];
             });
             return assets;
         },

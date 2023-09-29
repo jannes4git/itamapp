@@ -221,7 +221,7 @@ class AssetService
 			$e instanceof DoesNotExistException ||
 			$e instanceof MultipleObjectsReturnedException
 		) {
-			throw new NoteNotFound($e->getMessage());
+			throw new AssetNotFound($e->getMessage());
 		} else {
 			throw $e;
 		}

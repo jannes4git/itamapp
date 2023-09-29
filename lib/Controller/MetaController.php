@@ -14,12 +14,10 @@ class MetaController extends Controller
 {
 
 
-    private ColumnMapper $mapper;
     private CustomFieldMapper $cfMapper;
-    public function __construct(string $appName, IRequest $request, ColumnMapper $mapper, CustomFieldMapper $cfMapper)
+    public function __construct(string $appName, IRequest $request, CustomFieldMapper $cfMapper)
     {
         parent::__construct($appName, $request);
-        $this->mapper = $mapper;
         $this->cfMapper = $cfMapper;
     }
 
@@ -28,7 +26,6 @@ class MetaController extends Controller
      */
     public function index(): DataResponse
     {
-        //$columns = $this->mapper->getColumns();
         $customColumns = $this->cfMapper->findAllCustomFields();
         return new DataResponse($customColumns);
     }
