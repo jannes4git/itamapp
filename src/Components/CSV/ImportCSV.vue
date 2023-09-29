@@ -296,7 +296,6 @@ export default {
 .headers {
     display: flex;
     align-items: center;
-    justify-content: start;
     gap: 10px;
 }
 .headers h3,
