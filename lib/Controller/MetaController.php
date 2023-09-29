@@ -28,9 +28,9 @@ class MetaController extends Controller
      */
     public function index(): DataResponse
     {
-        $columns = $this->mapper->getColumns();
+        //$columns = $this->mapper->getColumns();
         $customColumns = $this->cfMapper->findAllCustomFields();
-        return new DataResponse(array($columns, $customColumns));
+        return new DataResponse($customColumns);
     }
 
     /**

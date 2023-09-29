@@ -276,7 +276,7 @@ export default {
         async getColumns() {
             var columnsDB = (await axios.get(generateUrl("/apps/itamapp/meta")))
                 .data;
-            this.customFelder = columnsDB[1];
+            this.customFelder = columnsDB;
 
             this.defaultFelder.forEach((element) => {
                 console.log("Pushe: ", element);
